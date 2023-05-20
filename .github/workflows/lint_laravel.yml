@@ -1,5 +1,9 @@
 name: Format code styling
 
+# **What it does**: Checks code for style using Laravel Pint and optionally applies fixes. 
+# **Why we have it**: Maintain readability of code.
+# **Who does it impact**: Maintainers.
+
 on:
   workflow_call:
     inputs:
