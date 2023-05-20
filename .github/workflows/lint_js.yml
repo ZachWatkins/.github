@@ -1,0 +1,41 @@
+name: Lint front-end code
+
+# **What it does**: Checks code for style using a repository's lint script and optionally applies fixes.
+# **Why we have it**: Maintain consistent readability of code.
+# **Who does it impact**: Contributors and maintainers.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '**.js'
+      - '**.mjs'
+      - '**.ts'
+      - '**.tsx'
+      - '**.yaml'
+      - '**.yml'
+      - '**.scss'
+      - 'src/**.css'
+      - .eslintrc.cjs
+      - 'package-lock.json'
+      - 'package.json'
+      - .github/workflows/lint_npm.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  lint-code:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/node-npm-setup
+
+      - name: Run linter
+        run: npm run lint
