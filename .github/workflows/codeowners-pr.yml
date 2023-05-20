@@ -1,0 +1,19 @@
+name: Codeowners
+
+# **What it does**: Automatically add reviewers.
+# **Why we have it**: So we can assign default reviewers.
+# **Who does it impact**: Maintainers.
+
+on:
+  pull_request:
+
+jobs:
+  codeowners:
+    if: ${{ github.repository == 'zachwatkins/.github' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add a reviewer
+        env:
+          GH_TOKEN: ${{ secrets.DOCUBOT_FR }}
+          PR: ${{ github.event.pull_request.html_url }}
+        run: gh pr edit $PR --add-reviewer zachwatkins
