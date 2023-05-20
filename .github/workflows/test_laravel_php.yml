@@ -1,0 +1,31 @@
+name: Test Laravel Application PHP
+
+on:
+  workflow_call:
+    inputs:
+      php:
+        default: "8.2"
+        type: string
+
+jobs:
+  lint:
+    uses: zachwatkins/.github/.github/workflows/lint_laravel.yml@main
+  
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php }}
+          extensions: json, dom, curl, libxml, mbstring
+          coverage: none
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-suggest
+      - name: Generate Laravel application key
+        run: php artisan key:generate
+      - name: Run tests
+        run: php artisan test
