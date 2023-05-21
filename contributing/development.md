@@ -14,7 +14,7 @@ npm start
 
 To maintain this project while allowing as many people as possible to contribute, it's important to keep in mind the different environments that people may be using to develop on.
 
-We will use coding conventions described here to improve cross-platform compatibility.
+We will use coding conventions described in this section to improve cross-platform compatibility.
 
 ### Bash
 
