@@ -1,0 +1,32 @@
+name: Repo Stale Check
+
+# **What it does**: Provides stale checks in the repo.
+# **Why we have it**: In the repo, we want to detect stale issues and pull requests automatically.
+# **Who does it impact**: Maintainers, contributors.
+
+on:
+  schedule:
+    - cron: '20 16 * * *' # Run every day at 16:20 UTC / 8:20 PST
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale_contributor:
+    if: github.repository == 'zachwatkins/.github'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/stale@v4
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-message: 'A stale label has been added to this issue becuase it has been open for 10 days with no activity. To keep this issue open, add a comment within 3 days.'
+          days-before-issue-stale: 10
+          days-before-issue-close: 10
+          exempt-issue-labels: 'help wanted,never-stale,waiting for review'
+          stale-pr-message: 'A stale label has been added to this pull request because it has been open 7 days with no activity. To keep this PR open, add a comment or push a commit within 3 days.'
+          days-before-pr-stale: 7
+          days-before-pr-close: 7
+          stale-pr-label: 'stale'
+          exempt-pr-labels: 'waiting for review,never-stale,ready to merge'
