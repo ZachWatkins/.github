@@ -1,8 +1,8 @@
 # Security Policy
 
-## Notice
+*+-+## Notice
 
-Even though I give no warranties or guarantees to the security of this library, it is still something I strive to achieve. If you feel that there is a flaw in this library's sanitization of database options you may provide your own sanitization functions by defining your callable variable to the `sanitization_callback` value in a field's `data_args` parameter. You may disable all sanitization by providing a boolean false value to this parameter as well.
+Even though I give no warranties or guarantees to the security of this repository (see [LICENSE](./LICENSE.md)), I take security very seriously. I will do my best to respond to security issues as quickly as possible.
 
 ## Supported Versions
 
@@ -10,15 +10,14 @@ The latest minor and major versions are supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.9.x   | yes                |
-| 0.8.x   | no                 |
+| 0.1.x   | yes                |
 
 ## Reporting a Vulnerability
 
-To report a vulnerability with the project please send an email to zachwatkins@tapfuel.io with [SECURITY] at the beginning of the subject line. You can expect a quicker response to security issues because I take the security of this library very seriously.
+To report a vulnerability with the project please send an email to zwatkins.it@gmail.com with [SECURITY] at the beginning of the subject line.
 
-I will notify users via Github in some way when a vulnerability is found. If there is a way through Github that allows users to subscribe to this kind of notice I will make note of that here.
+When a vulnerability is found, I will notify users in [Discussions](https://github.com/zachwatkins/.github/discussions).
 
 ## Contributing to Security
 
-At this time I welcome pull requests to improve the sanitization of fields. This code can be found in [./src/Settings/Sanitize.php](./src/Settings/Sanitize.php) Please read the [contribution guidelines](./CONTRIBUTING.md) before writing your code for a pull request. This feature can be disabled by users, but one of my goals with the library is to provide a secure default state through default sanitization of the field data.
+I welcome pull requests to improve the security of [workflow files](./.github/workflows). Please read the [contribution guidelines](./CONTRIBUTING.md) before writing your code for a pull request.
