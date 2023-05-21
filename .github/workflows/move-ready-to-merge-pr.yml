@@ -1,7 +1,7 @@
 name: Move and unlabel "ready to merge" pull requests
 
-# **What it does**: When a pull request in the repository is labeled "ready to merge," the "waiting for review" label is removed and the PR is moved to the "Triage" column in the project board.
-# **Why we have it**: To help with managing project boards.
+# **What it does**: When a pull request in the repository is labeled "ready to merge," the "waiting for review" label is removed.
+# **Why we have it**: To help reduce manual work.
 # **Who does it impact**: Contributors, maintainers.
 
 on:
@@ -17,13 +17,6 @@ jobs:
     if: github.repository == 'zachwatkins/.github' && github.event.label.name == 'ready to merge'
     runs-on: ubuntu-latest
     steps:
-      - name: move pull request
-        uses: alex-page/github-project-automation-plus@v0.8.3
-        with:
-          project: Project open source board
-          column: Triage
-          repo-token: ${{ secrets.DOCUBOT_READORG_REPO_WORKFLOW_SCOPES }}
-
       - name: remove label
         uses: andymckay/labeler@e6c4322d0397f3240f0e7e30a33b5c5df2d39e90
         with:
