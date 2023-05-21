@@ -21,6 +21,7 @@ The different ways in which I have worked can be summed up as follows, in ascend
 3. [Code of Conduct](./CODE_OF_CONDUCT.md)
 4. [License](./LICENSE.md)
 5. [Changelog](./CHANGELOG.md)
+6. [Authors](./AUTHORS.md)
 
 ## Terms
 
