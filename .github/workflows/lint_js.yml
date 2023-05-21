@@ -30,6 +30,7 @@ concurrency:
 
 jobs:
   lint-code:
+    if: github.repository == 'zachwatkins/.github'
     runs-on: 'ubuntu-latest'
     steps:
       - name: Check out repo
