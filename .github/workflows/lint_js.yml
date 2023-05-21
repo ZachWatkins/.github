@@ -19,7 +19,7 @@ on:
       - .eslintrc.cjs
       - 'package-lock.json'
       - 'package.json'
-      - .github/workflows/lint_npm.yml
+      - .github/workflows/lint_js.yml
 
 permissions:
   contents: read
