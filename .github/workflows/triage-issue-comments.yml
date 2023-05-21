@@ -1,0 +1,25 @@
+name: Triage new issue comments
+
+# **What it does**: Adds label triage to new issue comments in the repository.
+# **Why we have it**: Update open source project board for review.
+# **Who does it impact**: Maintainers, contributors.
+
+on:
+  issue_comment:
+    types:
+      - created
+
+permissions:
+  issues: write
+
+jobs:
+  triage-issue-comments:
+    if: ${{ github.repository == 'zachwatkins/.github' && !github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Label issues with new comments with 'triage'
+        uses: andymckay/labeler@e6c4322d0397f3240f0e7e30a33b5c5df2d39e90
+        with:
+          add-labels: 'triage'
+          ignore-if-labeled: true
