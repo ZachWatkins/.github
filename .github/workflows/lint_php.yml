@@ -1,6 +1,6 @@
 name: Format code styling
 
-# **What it does**: Checks code for style using Laravel Pint and optionally applies fixes. 
+# **What it does**: Checks code for style using a Composer lint script.
 # **Why we have it**: Maintain readability of code.
 # **Who does it impact**: Maintainers.
 
@@ -13,12 +13,10 @@ on:
       message:
         default: Format code styling
         type: string
-      fix:
-        default: true
-        type: boolean
 
 jobs:
   lint:
+    if: github.repository == 'zachwatkins/.github'
     runs-on: ubuntu-latest
 
     steps:
@@ -32,14 +30,8 @@ jobs:
           extensions: json, dom, curl, libxml, mbstring
           coverage: none
 
-      - name: Install Pint
-        run: composer global require laravel/pint
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist --no-interaction
 
-      - name: Run Pint
-        run: pint
-
-      - name: Commit linted files
-        if: ${{ inputs.fix }}
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: ${{ inputs.message }}
+      - name: Lint
+        run: composer run lint
