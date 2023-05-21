@@ -1,0 +1,29 @@
+{
+  "name": "zachwatkins.github",
+  "version": "0.1.0",
+  "description": "Central repository of GitHub integration files.",
+  "main": "index.js",
+  "engines": {
+    "node": "^16 || ^18"
+  },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zachwatkins/.github.git"
+  },
+  "keywords": [
+    "git",
+    "github",
+    "devops"
+  ],
+  "author": "Zachary K. Watkins",
+  "license": "(MIT AND CC-BY-4.0)",
+  "bugs": {
+    "url": "https://github.com/zachwatkins/.github/issues"
+  },
+  "homepage": "https://github.com/zachwatkins/.github#readme"
+}
