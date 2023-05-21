@@ -1,7 +1,7 @@
 name: Triage new issue comments
 
 # **What it does**: Adds label triage to new issue comments in the repository.
-# **Why we have it**: Update open source project board for review.
+# **Why we have it**: Update project board for review.
 # **Who does it impact**: Maintainers, contributors.
 
 on:
