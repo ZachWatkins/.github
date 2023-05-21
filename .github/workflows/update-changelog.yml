@@ -5,6 +5,7 @@ on:
 
 jobs:
   update:
+    if: github.repository == 'zachwatkins/.github'
     runs-on: ubuntu-latest
 
     steps:

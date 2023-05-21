@@ -9,9 +9,10 @@ on:
 
 jobs:
   lint:
-    uses: zachwatkins/.github/.github/workflows/lint_laravel.yml@main
-  
+    uses: zachwatkins/.github/.github/workflows/lint_php.yml@main
+
   test:
+    if: github.repository == 'zachwatkins/.github'
     needs: lint
     runs-on: ubuntu-latest
     steps:

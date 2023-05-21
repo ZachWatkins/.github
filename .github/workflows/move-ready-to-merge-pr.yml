@@ -14,11 +14,7 @@ permissions:
 
 jobs:
   unmark_for_review:
-    if: >-
-      ${{
-        github.repository == 'zachwatkins/.github' &&
-        github.event.label.name == 'ready to merge'
-      }}
+    if: github.repository == 'zachwatkins/.github' && github.event.label.name == 'ready to merge'
     runs-on: ubuntu-latest
     steps:
       - name: move pull request
