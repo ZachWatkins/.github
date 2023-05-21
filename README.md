@@ -6,3 +6,5 @@ Although many of the files here are based on my own experience and scripts I've 
 
 1. [GitHub Docs](https://github.com/github/docs)
 2. [Laravel Framework](https://github.com/laravel/.github)
+
+Some GitHub actions were copied from these repositories as a starting point and if any attribution is warranted to them I do so freely.
