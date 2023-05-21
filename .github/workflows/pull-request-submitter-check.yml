@@ -2,7 +2,7 @@ name: Notify When Maintainers Cannot Edit
 
 # **What it does**: Notifies the author of a PR when their PR does not allow maintainers to edit it.
 # **Why we have it**: To prevent having to do this manually.
-# **Who does it impact**: Open-source.
+# **Who does it impact**: Maintainers, contributors.
 
 on:
   pull_request_target:
@@ -20,7 +20,7 @@ jobs:
         with:
           script: |
             const repo = context.repo.repo;
-            
+
             const query = `
               query($number: Int!) {
                 repository(owner: "zachwatkins", name: "${repo}") {
@@ -40,7 +40,7 @@ jobs:
 
             try {
               console.log(`Check zachwatkins/${repo}#${pullNumber} for maintainer edit access ...`);
-              
+
               const result = await github.graphql(query, variables);
 
               console.log(JSON.stringify(result, null, 2));
