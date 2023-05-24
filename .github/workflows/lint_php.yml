@@ -26,7 +26,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ inputs.php }}
-          extensions: json, dom, curl, libxml, mbstring
           coverage: none
 
       - uses: ./.github/actions/php-composer-setup
