@@ -8,25 +8,24 @@ on:
         type: string
 
 jobs:
-  lint:
-    uses: zachwatkins/.github/.github/workflows/lint_php.yml@main
-
   test:
     if: github.repository == 'zachwatkins/.github'
-    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ inputs.php }}
           extensions: json, dom, curl, libxml, mbstring
           coverage: none
-      - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --no-suggest
+
+      - uses: ./.github/actions/php-composer-setup
+
       - name: Generate Laravel application key
         run: php artisan key:generate
+
       - name: Run tests
         run: php artisan test
