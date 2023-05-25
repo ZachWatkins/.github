@@ -10,8 +10,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "echo \"Error: no lint specified\" && exit 1",
-    "build": "echo \"Error: no build specified\" && exit 1"
+    "lint": "echo \"Error: no lint specified\" && exit 0",
+    "build": "echo \"Error: no build specified\" && exit 1",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/zachwatkins/.github/issues"
   },
-  "homepage": "https://github.com/zachwatkins/.github#readme"
+  "homepage": "https://github.com/zachwatkins/.github#readme",
+  "devDependencies": {
+    "husky": "^8.0.3"
+  }
 }
