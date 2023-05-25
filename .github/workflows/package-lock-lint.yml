@@ -24,14 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'zachwatkins/.github'
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: 'package.json'
-          cache: npm
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/node-npm-setup
 
       - name: Run check
         run: |

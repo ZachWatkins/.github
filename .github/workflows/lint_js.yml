@@ -33,9 +33,7 @@ jobs:
     if: github.repository == 'zachwatkins/.github'
     runs-on: 'ubuntu-latest'
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v3
-
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/node-npm-setup
 
       - name: Run linter

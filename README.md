@@ -1,10 +1,8 @@
 # GitHub Integration
 
-> IMPORTANT: This is work in progress! The project is subject to significant change until its 1.0.0 release.
-
 Repository of GitHub integration files.
 
-My goal is to centralize all of my GitHub integration scripts and provide them in a way that is easily integrated into an existing repository.
+> IMPORTANT: This is work in progress! The project is subject to significant change until its 1.0.0 release.
 
 The different ways in which I have worked can be summed up as follows, in ascending order of complexity:
 
