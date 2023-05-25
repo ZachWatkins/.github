@@ -1,6 +1,6 @@
 # Security Policy
 
-*+-+## Notice
+## Notice
 
 Even though I give no warranties or guarantees to the security of this repository (see [LICENSE](./LICENSE.md)), I take security very seriously. I will do my best to respond to security issues as quickly as possible.
 
