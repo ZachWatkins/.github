@@ -1,0 +1,18 @@
+{
+    "editor.tabSize": 4,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "editor.detectIndentation": false,
+    "eslint.experimental.useFlatConfig": true,
+    "eslint.enable": true,
+    "eslint.format.enable": true,
+    "eslint.lintTask.enable": true,
+    "eslint.validate": ["javascript", "json", "markdown"],
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "eslint.run": "onSave",
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+}
