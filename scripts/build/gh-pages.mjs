@@ -40,10 +40,11 @@ const dom = {
 </html>`,
 }
 
-// END OF CONFIGURATION.
-// BEGIN BUILD LOGIC.
+function build({ markdown, assets, directory, page }) {
+    if (page) {
+        Object.assign(dom, page)
+    }
 
-function build({ markdown, assets, directory }) {
     const queue = []
 
     for (let i = 0; i < markdown.length; i++) {
