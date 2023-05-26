@@ -1,9 +1,16 @@
+/**
+ * Markdown to HTML build script.
+ * @author Zachary K. Watkins
+ * @license MIT
+ * @version 0.1.0
+ */
 import fs from 'fs'
 import { marked } from 'marked'
 import { gfmHeadingId } from "marked-gfm-heading-id"
+marked.use({ gfm: true })
 marked.use(gfmHeadingId())
 
-const files = [
+const markdown = [
     ['README.md', 'index.html'],
     ['contributing/development.md', 'contributing/development.html'],
     ['contributing/self-review.md', 'contributing/self-review.html'],
@@ -15,6 +22,11 @@ const files = [
     ['SECURITY.md', 'security.html'],
 ]
 
+const assets = [
+    ['node_modules/github-markdown-css/github-markdown.css', 'styles/github-markdown-css/github-markdown.css'],
+    ['node_modules/github-markdown-css/license', 'styles/github-markdown-css/license'],
+]
+
 const dom = {
     pre: `<!doctype html>
 <html>
@@ -23,28 +35,40 @@ const dom = {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles/github-markdown-css/github-markdown.css">
         <title>README</title>
+        <style>
+            .markdown-body {
+                box-sizing: border-box;
+                min-width: 200px;
+                max-width: 980px;
+                margin: 0 auto;
+                padding: 45px;
+            }
+
+            @media (max-width: 767px) {
+                .markdown-body {
+                    padding: 15px;
+                }
+            }
+        </style>
     </head>
-    <body>`,
-    pages: `<ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="contributing/development.html">Development</a></li>
-        <li><a href="contributing/self-review.html">Self Review</a></li>
-        <li><a href="contributing/types-of-contributions.html">Types of Contributions</a></li>
-        <li><a href="changelog.html">Changelog</a></li>
-        <li><a href="code-of-conduct.html">Code of Conduct</a></li>
-        <li><a href="contributing.html">Contributing</a></li>
-        <li><a href="license.html">License</a></li>
-        <li><a href="security.html">Security</a></li>
-    </ul>`,
-    post: `</body></html>`
+    <body class="markdown-body">`,
+    navigation: ['<ul>', '</ul>'],
+    post: `</body>
+</html>`
 }
 
-Promise.all([
-    copyFile('node_modules/github-markdown-css/github-markdown.css', 'build/styles/github-markdown-css/github-markdown.css'),
-    copyFile('node_modules/github-markdown-css/license', 'build/styles/github-markdown-css/license'),
-])
+// END OF CONFIGURATION.
+// BEGIN BUILD LOGIC.
 
-Promise.all(files.map(async ([src, dest]) => {
+const queue = []
+
+for (let i = 0; i < markdown.length; i++) {
+    queue.push(buildMarkdown(markdown[i][0], markdown[i][1]))
+}
+
+for (let i = 0; i < assets.length; i++) {
+    queue.push(copyFile(assets[i][0], assets[i][1]))
+}
 
 function makeNavList(files) {
     let nav = '<ul><li><a href="index.html">Home</a></li>'
@@ -55,18 +79,19 @@ function makeNavList(files) {
     return nav
 }
 
-async function copyFile(src, dest) {
-    const destDirectory = dest.substring(0, dest.lastIndexOf('/'))
+async function copyFile(source, destination) {
+    destination = 'build/' + destination
+    const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
     if (!fs.existsSync(destDirectory)) {
         fs.mkdirSync(destDirectory, { recursive: true })
     }
-    fs.copyFileSync(src, dest)
+    fs.copyFileSync(source, destination)
 }
 
-async function buildMarkdown(path) {
-    const content = fs.readFileSync(path[0], 'utf8')
+async function buildMarkdown(source, destination) {
+    destination = 'build/' + destination
+    const content = fs.readFileSync(source, 'utf8')
     const html = marked.parse(content, { mangle: false })
-    const destination = 'build/' + path[1]
     const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
     if (!fs.existsSync(destDirectory)) {
         fs.mkdirSync(destDirectory, { recursive: true })
