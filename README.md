@@ -1,8 +1,26 @@
 # GitHub Integration
 
-Repository of GitHub integration files.
+Useful GitHub integration files for saving time.  
+Includes a [documentation site](https://zachwatkins.github.io/.github/) built from markdown and hosted on GitHub Pages.  
+
+![GitHub Package.json Version](https://img.shields.io/github/package-json/v/zachwatkins/.github)
+![Code Size](https://img.shields.io/github/languages/code-size/zachwatkins/.github)
+![License](https://img.shields.io/github/license/zachwatkins/.github)
 
 > IMPORTANT: This is work in progress! The project is subject to significant change until its 1.0.0 release.
+
+## Build Status
+
+![GitHub Pages Build](https://img.shields.io/github/actions/workflow/status/zachwatkins/.github/github-pages.yml?label=GitHub%20Pages&logo=github)
+![Linter Status](https://img.shields.io/github/actions/workflow/status/zachwatkins/.github/lint_js.yml?label=Lint%20JS)
+
+## Issues Status
+
+![Open Issues](https://img.shields.io/github/issues-raw/zachwatkins/.github)
+![Open Bug Issues](https://img.shields.io/github/issues/zachwatkins/.github/bug)
+![Open Feature Issues](https://img.shields.io/github/issues/zachwatkins/.github/feature)
+![Open Pull Requests](https://img.shields.io/github/issues-pr-raw/zachwatkins/.github)
+![Last Commit](https://img.shields.io/github/last-commit/zachwatkins/.github)
 
 ## Table of Contents
 
