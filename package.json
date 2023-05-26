@@ -31,5 +31,11 @@
   "homepage": "https://github.com/zachwatkins/.github#readme",
   "devDependencies": {
     "husky": "^8.0.3"
+  },
+  "dependencies": {
+    "@types/marked": "^5.0.0",
+    "github-markdown-css": "^5.2.0",
+    "marked": "^5.0.2",
+    "marked-gfm-heading-id": "^3.0.3"
   }
 }
