@@ -6,7 +6,7 @@
  */
 import fs from 'fs'
 import { marked } from 'marked'
-import { gfmHeadingId } from "marked-gfm-heading-id"
+import { gfmHeadingId } from 'marked-gfm-heading-id'
 marked.use({ gfm: true })
 marked.use(gfmHeadingId())
 
@@ -37,7 +37,7 @@ const dom = {
     <body class="markdown-body">`,
     navigation: ['<ul>', '</ul>'],
     post: `</body>
-</html>`
+</html>`,
 }
 
 // END OF CONFIGURATION.
@@ -53,15 +53,6 @@ function build({ markdown, assets, directory }) {
     for (let i = 0; i < assets.length; i++) {
         queue.push(copyFile(assets[i][0], assets[i][1], directory))
     }
-}
-
-function makeNavList(files) {
-    let nav = '<ul><li><a href="index.html">Home</a></li>'
-    for (let i = 1; i < files.length; i++) {
-        nav += '<li><a href="' + files[i][1] + '">' + files[i][0] + '</a></li>'
-    }
-    nav += '</ul>'
-    return nav
 }
 
 async function copyFile(source, destination, directory) {
