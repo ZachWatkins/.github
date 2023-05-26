@@ -4,7 +4,21 @@ Repository of GitHub integration files.
 
 > IMPORTANT: This is work in progress! The project is subject to significant change until its 1.0.0 release.
 
-The different ways in which I have worked can be summed up as follows, in ascending order of complexity:
+## Table of Contents
+
+1. [Use Cases](#use-cases)
+1. [Terms](#terms)
+2. [Contributing](./CONTRIBUTING.md)
+3. [Code of Conduct](./CODE_OF_CONDUCT.md)
+4. [License](./LICENSE.md)
+5. [Changelog](./CHANGELOG.md)
+6. [Authors](./AUTHORS.md)
+
+## Use Cases
+
+I have worked on a number of projects over the years, both personal and professional, and common tasks exist that can be automated using GitHub Actions.
+
+The different ways in which I have worked (some more often than others) can be summed up as follows, in ascending order of complexity:
 
 1. Personal private project
 2. Personal public project
@@ -13,15 +27,6 @@ The different ways in which I have worked can be summed up as follows, in ascend
 6. Collaborative public library
 8. Open source project
 7. Open source library
-
-## Table of Contents
-
-1. [Terms](#terms)
-2. [Contributing](./CONTRIBUTING.md)
-3. [Code of Conduct](./CODE_OF_CONDUCT.md)
-4. [License](./LICENSE.md)
-5. [Changelog](./CHANGELOG.md)
-6. [Authors](./AUTHORS.md)
 
 ## Terms
 
