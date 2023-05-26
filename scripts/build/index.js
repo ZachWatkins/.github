@@ -4,8 +4,8 @@
  * @license MIT
  * @version 0.1.0
  */
-
-require('./gh-pages.js')({
+import buildGitHubPages from './gh-pages.js'
+buildGitHubPages({
     assets: [
         ['node_modules/github-markdown-css/github-markdown.css', 'styles/github-markdown-css/github-markdown.css'],
         ['node_modules/github-markdown-css/license', 'styles/github-markdown-css/license'],

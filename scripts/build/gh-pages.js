@@ -4,9 +4,9 @@
  * @license MIT
  * @version 0.1.0
  */
-const fs = require('fs')
-const { marked } = require('marked')
-const { gfmHeadingId } = require('marked-gfm-heading-id')
+import fs from 'fs'
+import { marked } from 'marked'
+import { gfmHeadingId } from 'marked-gfm-heading-id'
 marked.use({ gfm: true })
 marked.use(gfmHeadingId())
 
@@ -75,4 +75,4 @@ async function buildMarkdown(source, destination, directory) {
     fs.writeFileSync(destination, dom.pre + html + dom.post)
 }
 
-module.exports = build
+export default build
