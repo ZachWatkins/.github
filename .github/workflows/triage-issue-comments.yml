@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Label issues with new comments with 'triage'
-        uses: andymckay/labeler@e6c4322d0397f3240f0e7e30a33b5c5df2d39e90
+        uses: andymckay/labeler@1.0.4
         with:
           add-labels: 'triage'
           ignore-if-labeled: true
