@@ -11,7 +11,7 @@ Most of this repository focuses on automatic configuration of a repository. Howe
 ### Pull Requests
 
 - [ ] Allow merge commits: Default to pull request title and description
-- [ ] Allow squash merging: Default to pull request title and description
+- [ ] Allow squash merging: Default to pull request title and commit details
 - [ ] Allow rebase merging
 - [ ] Always suggest updating pull request branches
 - [ ] Consider allowing auto-merging pull requests if you have a good test suite
