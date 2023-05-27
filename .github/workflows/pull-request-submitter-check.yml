@@ -20,12 +20,9 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const repo = context.repo.repo;
-            const repoOwner = 'zachwatkins';
-
             const query = `
               query($number: Int!) {
-                repository(owner: `${repoOwner}`, name: `${repo}`) {
+                repository(owner: '${context.repo.owner}', name: '${context.repo.repo}') {
                   pullRequest(number: $number) {
                     headRepositoryOwner {
                       login
@@ -41,7 +38,7 @@ jobs:
             const variables = { number: pullNumber };
 
             try {
-              console.log(`Check ${repoOwner}/${repo}#${pullNumber} for maintainer edit access ...`);
+              console.log(`Check ${context.repo.owner}/${context.repo.repo}#${pullNumber} for maintainer edit access ...`);
 
               const result = await github.graphql(query, variables);
 
@@ -49,8 +46,8 @@ jobs:
 
               const pullRequest = result.repository.pullRequest;
 
-              if (pullRequest.headRepositoryOwner.login === `${repoOwner}`) {
-                console.log(`PR owned by ${repoOwner}`);
+              if (pullRequest.headRepositoryOwner.login === context.repo.owner) {
+                console.log(`PR owned by ${context.repo.owner}`);
                 return;
               }
 
@@ -61,18 +58,18 @@ jobs:
               }
 
               if (!pullRequest.maintainerCanModify) {
-                console.log(`PR not owned by ${repoOwner} and does not have maintainer edits enabled`);
+                console.log(`PR not owned by ${context.repo.owner} and does not have maintainer edits enabled`);
 
                 await github.rest.issues.createComment({
                   issue_number: pullNumber,
-                  owner: `${repoOwner}`,
+                  owner: context.repo.owner,
                   repo: context.repo.repo,
                   body: "Thanks for submitting a pull request!\n\nIn order to review and merge pull requests most efficiently, we require that all pull requests grant maintainer edit access before we review them. For information on how to do this, [see the relevant GitHub documentation](https://docs.github.com/en/github/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork). Additionally, GitHub doesn't allow maintainer permissions from organization accounts. Please resubmit this PR from a personal GitHub account with maintainer permissions enabled."
                 });
 
                 await github.rest.pulls.update({
                   pull_number: pullNumber,
-                  owner: `${repoOwner}`,
+                  owner: context.repo.owner,
                   repo: context.repo.repo,
                   state: 'closed'
                 });
