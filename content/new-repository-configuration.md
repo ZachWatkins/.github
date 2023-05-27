@@ -7,10 +7,15 @@ Most of this repository focuses on automatic configuration of a repository. Howe
 - [ ] Template repository
 - [ ] Default branch
 - [ ] Feature choices: wikis, issues, sponsorships, archive, discussions, projects
-- [ ] Pull requests: disallow squash merging
+
+### Pull Requests
+
+- [ ] Allow merge commits: Default to pull request title and description
+- [ ] Allow squash merging: Default to pull request title and description
+- [ ] Allow rebase merging
 - [ ] Always suggest updating pull request branches
 - [ ] Consider allowing auto-merging pull requests if you have a good test suite
-- [ ] Consider allowing auto-deleting merged branches if you have a good test suite
+- [ ] Automatically delete head branches (pull request branches)
 - [ ] Pushes: Limit how many branches and tags can be updated in a single push
 
 ## Branches
