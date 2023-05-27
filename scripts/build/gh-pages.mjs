@@ -40,13 +40,22 @@ const templateParts = {
 </html>`,
 }
 
+/**
+ * Builds a set of web pages from Markdown files and copies assets to a specified directory.
+ * @param {Object} options - The build options.
+ * @param {Array} options.markdown - An array of Markdown files to build.
+ * @param {Array} options.assets - An array of asset files to copy.
+ * @param {string} options.directory - The directory to output the built files to.
+ * @param {Object} [options.page] - An object containing template parts to use for the built pages.
+ * @returns {void}
+ */
 function build({ markdown, assets, directory, page }) {
     page = page ? { ...templateParts, ...page } : templateParts
 
     const queue = []
 
     for (let i = 0; i < markdown.length; i++) {
-        queue.push(buildMarkdown(i, markdown, directory, page))
+        queue.push(buildMarkdownWebpage(i, markdown, directory, page))
     }
 
     for (let i = 0; i < assets.length; i++) {
@@ -54,6 +63,13 @@ function build({ markdown, assets, directory, page }) {
     }
 }
 
+/**
+ * Copies a file from one location to another.
+ * @param {string} source - The path to the source file.
+ * @param {string} destination - The path to the destination file.
+ * @param {string} directory - The directory to copy the file to.
+ * @returns {Promise} A promise that resolves when the file has been copied.
+ */
 async function copyFile(source, destination, directory) {
     destination = directory + '/' + destination
     const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
@@ -63,32 +79,53 @@ async function copyFile(source, destination, directory) {
     fs.copyFileSync(source, destination)
 }
 
-async function buildMarkdown(index, fileMap, directory, page) {
+/**
+ * Builds a web page from a Markdown file.
+ * @param {number} index - The index of the Markdown file entry within the fileMap array.
+ * @param {[string[]]} fileMap - An array of Markdown files and their destination HTML file path.
+ * @param {string} directory - The directory to output the built files to.
+ * @param {Object} page - An object containing template parts to use for the built page.
+ * @returns {Promise} A promise that resolves when the page has been built.
+ */
+async function buildMarkdownWebpage(index, fileMap, directory, page) {
+
     const source = fileMap[index][0]
     const destination = directory + '/' + fileMap[index][1]
 
     const content = fs.readFileSync(source, 'utf8')
 
-    marked.parse(content, { mangle: false }).then((html) => {
+    marked.parse(content, { mangle: false }).then((markdownHtml) => {
 
-        html = relinkFileRoutes(html, fileMap)
-        html = page.pre + html + page.post
-
-        // Update CSS stylesheet link for nested routes.
-        const depth = destination.split('/').length - 1
-        if (depth > 1) {
-            html = html.replace(
-                'href="./styles/github-markdown-css/github-markdown.css"',
-                `href="${'../'.repeat(depth - 1)}styles/github-markdown-css/github-markdown.css"`
-            )
-        }
+        const html = applyTemplate(markdownHtml, page, destination, fileMap)
 
         const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
+
         if (!fs.existsSync(destDirectory)) {
             fs.mkdirSync(destDirectory, { recursive: true })
         }
+
         fs.writeFileSync(destination, html)
     })
+
+}
+
+/**
+ * Apply a webpage template to the Markdown content.
+ * @param {string} markdownHtml
+ * @param {string} template
+ * @param {string} destination
+ * @param {[string[]]} fileMap
+ * @returns
+ */
+function applyTemplate(markdownHtml, template, destination, fileMap) {
+
+    let html = relinkFileRoutes(markdownHtml, fileMap)
+    html = pathIsDeep(destination)
+        ? setStylesheetDepth(template.pre, pathDepth(destination)) + html
+        : template.pre + html
+    html += template.post
+    return html
+
 }
 
 // Update markdown file references to html file references for this repository's files being build for GitHub Pages.
@@ -104,6 +141,51 @@ function relinkFileRoutes(html, fileMap) {
     }
 
     return html
+
+}
+
+/**
+ * Update CSS stylesheet link for nested routes.
+ * @param {string} html - The HTML to update.
+ * @param {number} depth - The depth of the HTML file.
+ * @returns {string} The updated HTML.
+ */
+function setStylesheetDepth(html, depth) {
+
+    return html.replace(
+        'href="./styles/github-markdown-css/github-markdown.css"',
+        `href="${'../'.repeat(depth - 1)}styles/github-markdown-css/github-markdown.css"`
+    )
+
+}
+
+/**
+ * Detect whether a given path is nested.
+ * @param {string} path - The path to check.
+ * @returns {boolean} Whether the path is nested.
+ */
+function pathIsDeep(path) {
+
+    if (0 === path.indexOf('./')) {
+        return path.substring(2).split('/').length > 1
+    }
+
+    return path.split('/').length > 1
+
+}
+
+/**
+ * Get a zero-based depth of the given file path.
+ * @param {string} path - The path to evaluate.
+ * @returns {number} The zero-based depth of the path.
+ */
+function pathDepth(path) {
+
+    if (0 === path.indexOf('./')) {
+        return path.substring(2).split('/').length - 1
+    }
+
+    return path.split('/').length - 1
 
 }
 
