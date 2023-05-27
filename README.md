@@ -25,12 +25,14 @@ Includes a [documentation site](https://zachwatkins.github.io/.github/) built fr
 ## Table of Contents
 
 1. [Use Cases](#use-cases)
-1. [Terms](#terms)
-2. [Contributing](./CONTRIBUTING.md)
-3. [Code of Conduct](./CODE_OF_CONDUCT.md)
-4. [License](./LICENSE.md)
-5. [Changelog](./CHANGELOG.md)
-6. [Authors](./AUTHORS.md)
+2. [Terms](#terms)
+3. [New Repository Configuration](./content/new-repository-configuration.md)
+4. [Contributing](./CONTRIBUTING.md)
+5. [Code of Conduct](./CODE_OF_CONDUCT.md)
+6. [License](./LICENSE.md)
+7. [Changelog](./CHANGELOG.md)
+8. [Authors](./AUTHORS.md)
+9. [Inspiration](#inspiration)
 
 ## Use Cases
 
@@ -53,6 +55,8 @@ The different ways in which I have worked (some more often than others) can be s
 3. Open source - working in public and accepting public requests.
 4. Project - codebase not intended for use within another codebase. Examples: website, theme, CLI-only program.
 5. Library - codebase intended for use by other developers within their code.
+
+## Inspiration
 
 Although many of the files here are based on my own experience and scripts I've written for projects over the years, I drew a lot of inspiration and knowledge from the following repositories that are doing this at a level I can only describe as best in class:
 
