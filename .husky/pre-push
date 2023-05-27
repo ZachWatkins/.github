@@ -4,4 +4,5 @@
 # Skip husky in CI environments.
 [ -n "$CI" ] && exit 0
 
-npx lint-staged
+node scripts/build/index.mjs
+npm run test
