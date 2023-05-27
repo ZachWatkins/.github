@@ -12,6 +12,8 @@ on:
       - '**.mjs'
       - '**.ts'
       - '**.tsx'
+      - '**.yaml'
+      - '**.yml'
       - '**.scss'
       - 'src/**.css'
       - .eslintrc.cjs
