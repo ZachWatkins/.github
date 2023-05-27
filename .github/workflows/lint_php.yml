@@ -1,4 +1,4 @@
-name: Format code styling
+name: Lint PHP code styling
 
 # **What it does**: Checks code for style using a Composer lint script.
 # **Why we have it**: Maintain readability of code.
@@ -10,12 +10,9 @@ on:
       php:
         default: "8.2"
         type: string
-      message:
-        default: Format code styling
-        type: string
 
 jobs:
-  lint:
+  lint_php:
     if: github.repository == 'zachwatkins/.github'
     runs-on: ubuntu-latest
     steps:
