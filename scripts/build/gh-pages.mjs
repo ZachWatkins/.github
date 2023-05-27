@@ -7,16 +7,16 @@
 import fs from 'fs'
 import { marked } from 'marked'
 import { gfmHeadingId } from 'marked-gfm-heading-id'
-marked.use({ gfm: true })
+marked.use({ gfm: true, async: true })
 marked.use(gfmHeadingId())
 
-const dom = {
+const templateParts = {
     pre: `<!doctype html>
 <html>
     <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="styles/github-markdown-css/github-markdown.css">
+        <link rel="stylesheet" href="./styles/github-markdown-css/github-markdown.css">
         <title>README</title>
         <style>
             .markdown-body {
@@ -41,14 +41,12 @@ const dom = {
 }
 
 function build({ markdown, assets, directory, page }) {
-    if (page) {
-        Object.assign(dom, page)
-    }
+    page = page ? { ...templateParts, ...page } : templateParts
 
     const queue = []
 
     for (let i = 0; i < markdown.length; i++) {
-        queue.push(buildMarkdown(markdown[i][0], markdown[i][1], directory))
+        queue.push(buildMarkdown(i, markdown, directory, page))
     }
 
     for (let i = 0; i < assets.length; i++) {
@@ -65,15 +63,48 @@ async function copyFile(source, destination, directory) {
     fs.copyFileSync(source, destination)
 }
 
-async function buildMarkdown(source, destination, directory) {
-    destination = directory + '/' + destination
+async function buildMarkdown(index, fileMap, directory, page) {
+    const source = fileMap[index][0]
+    const destination = directory + '/' + fileMap[index][1]
+
     const content = fs.readFileSync(source, 'utf8')
-    const html = marked.parse(content, { mangle: false })
-    const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
-    if (!fs.existsSync(destDirectory)) {
-        fs.mkdirSync(destDirectory, { recursive: true })
+
+    marked.parse(content, { mangle: false }).then((html) => {
+
+        html = relinkFileRoutes(html, fileMap)
+        html = page.pre + html + page.post
+
+        // Update CSS stylesheet link for nested routes.
+        const depth = destination.split('/').length - 1
+        if (depth > 1) {
+            html = html.replace(
+                'href="./styles/github-markdown-css/github-markdown.css"',
+                `href="${'../'.repeat(depth - 1)}styles/github-markdown-css/github-markdown.css"`
+            )
+        }
+
+        const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
+        if (!fs.existsSync(destDirectory)) {
+            fs.mkdirSync(destDirectory, { recursive: true })
+        }
+        fs.writeFileSync(destination, html)
+    })
+}
+
+// Update markdown file references to html file references for this repository's files being build for GitHub Pages.
+function relinkFileRoutes(html, fileMap) {
+
+    for (let i = 0; i < fileMap.length; i++) {
+        const source = fileMap[i][0]
+        const position = html.indexOf(`href="./${source}"`)
+        if (position > -1) {
+            const destination = fileMap[i][1]
+            html = html.replaceAll(`href="./${source}"`, `href="./${destination}"`)
+        }
     }
-    fs.writeFileSync(destination, dom.pre + html + dom.post)
+
+    return html
+
 }
 
 export default build
