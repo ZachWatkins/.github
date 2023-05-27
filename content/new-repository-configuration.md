@@ -24,9 +24,9 @@ Branch protection rules
 - [ ] Require status checks to pass before merging
   - [ ] Require branches to be up to date before merging  
   - [ ] Suggested checks: `build`, `test`, `lint`, `coverage`  
-- [ ] Require signed commits
 - [ ] Require linear history
-- [ ] Require deployments to succeed before merging
+- [ ] Require deployments to succeed before merging a pull request  
+      Only name environment(s) if all pull requests deploy  
 - [ ] Do not allow bypassing branch protection
 
 ## Tags
