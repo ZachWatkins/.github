@@ -4,6 +4,7 @@ name: Test Build
 
 on:
   workflow_dispatch:
+  merge_group:
   pull_request:
     paths:
       - '**.md'
