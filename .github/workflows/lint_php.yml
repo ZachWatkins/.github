@@ -1,4 +1,4 @@
-name: Format code styling
+name: Lint PHP code styling
 
 # **What it does**: Checks code for style using a Composer lint script.
 # **Why we have it**: Maintain readability of code.
@@ -9,9 +9,6 @@ on:
     inputs:
       php:
         default: "8.2"
-        type: string
-      message:
-        default: Format code styling
         type: string
 
 jobs:
