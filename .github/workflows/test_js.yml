@@ -8,6 +8,17 @@ on:
   workflow_dispatch:
   merge_group:
   pull_request:
+    paths:
+      - '**.js'
+      - '**.mjs'
+      - '**.ts'
+      - '**.tsx'
+      - '**.scss'
+      - 'src/**.css'
+      - .eslintrc.cjs
+      - 'package-lock.json'
+      - 'package.json'
+      - .github/workflows/test_js.yml
 
 permissions:
   contents: read
