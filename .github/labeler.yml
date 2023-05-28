@@ -23,3 +23,10 @@ documentation:
 - .github/CODEOWNERS
 - LICENSE
 - AUTHORS
+
+# Add 'dependencies' label to any change to dependency files.
+dependencies:
+- package-lock.json
+- yarn.lock
+- npm-shrinkwrap.json
+- composer.lock
