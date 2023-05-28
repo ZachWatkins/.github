@@ -1,0 +1,22 @@
+name: Pull Request Labeler
+
+# **What it does**: Adds one or more labels to new pull requests in the repository based on which files are changed.
+# **Why we have it**: Assist with assigning reviewers to pull requests and tracking changes over time by category.
+# **Who does it impact**: Maintainers, contributors.
+
+on:
+  pull_request_target:
+
+jobs:
+  triage:
+    if: ${{ github.repository == 'zachwatkins/.github' }}
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v4
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+          sync-labels: true
