@@ -115,6 +115,7 @@ const MarkdownWebpageFactory = {
         marked.parse(content, { mangle: false }).then((markdownHtml) => {
 
             markdownHtml = this.applyTemplate(markdownHtml, this.template(depth))
+            markdownHtml = this.replaceMarkdownFileReferences(markdownHtml)
 
             if (!fs.existsSync(destDirectory)) {
                 fs.mkdirSync(destDirectory, { recursive: true })
@@ -123,6 +124,28 @@ const MarkdownWebpageFactory = {
             fs.writeFileSync(destination, markdownHtml)
 
         })
+
+    },
+
+    /**
+     * Replace Markdown file references with HTML file references.
+     * @param {string} html - The HTML to search.
+     * @returns {string} The HTML with the Markdown file references replaced.
+     */
+    replaceMarkdownFileReferences: function (html) {
+
+        let markdownRef = this.getMarkdownFileReference(html)
+        while (markdownRef) {
+            let newRef = this.getRoute(markdownRef[1])
+            console.log(markdownRef[1], newRef)
+            if (markdownRef[2]) {
+                newRef += markdownRef[2]
+            }
+            html = html.replace(markdownRef[0], `href="${newRef}"`)
+            markdownRef = this.getMarkdownFileReference(html)
+        }
+
+        return html
 
     },
 
@@ -139,11 +162,20 @@ const MarkdownWebpageFactory = {
         path = path.toLowerCase()
 
         if ('readme.md' !== path) {
-            return path.toLowerCase().replaceAll('_', '-').replace(/^content\//, '').replace(/\.md$/, '') + '/'
+            return path.toLowerCase().replaceAll('_', '-').replace(/^(\.\/)?content\//, '').replace(/\.md$/, '') + '/'
         }
 
         return ''
 
+    },
+
+    /**
+     * Get the first Markdown file reference from the HTML string.
+     * @param {string} html - The HTML to search.
+     * @returns {string} The first Markdown file reference.
+     */
+    getMarkdownFileReference: function (html) {
+        return html.match(/\bhref="(?!#)(?!http)([^"]+\.md)(#[a-zA-Z0-9\-_]+)?"/)
     },
 
     /**
