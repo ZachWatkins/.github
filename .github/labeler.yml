@@ -1,0 +1,17 @@
+# Add labels to new pull requests based on the changed file names and paths.
+# https://github.com/marketplace/actions/labeler
+
+# Add 'triage' label to every new pull request.
+triage:
+- '*'
+- '**/*'
+
+# Add 'source' label to any change to source files.
+source:
+- any: ['src/**/*']
+
+# Add 'content' label to any change to content files.
+content:
+- 'content/**/*'
+- 'contributing/**/*'
+- '*.md'
