@@ -15,3 +15,11 @@ content:
 - 'content/**/*'
 - 'contributing/**/*'
 - '*.md'
+
+# Add 'documentation' label to any change to documentation files. Quotation marks are required for the leading asterisk.
+documentation:
+- '*.md'
+- '**/*.md'
+- .github/CODEOWNERS
+- LICENSE
+- AUTHORS
