@@ -1,0 +1,38 @@
+# Add labels to new pull requests based on the changed file names and paths.
+# https://github.com/marketplace/actions/labeler
+
+# Add 'triage' label to every new pull request.
+triage:
+- '*'
+- '**/*'
+
+# Add 'source' label to any change to source files.
+source:
+- any: ['src/**/*']
+
+# Add 'content' label to any change to content files.
+content:
+- 'content/**/*'
+- 'contributing/**/*'
+- '*.md'
+
+# Add 'documentation' label to any change to documentation files. Quotation marks are required for the leading asterisk.
+documentation:
+- '*.md'
+- '**/*.md'
+- .github/CODEOWNERS
+- LICENSE
+- AUTHORS
+
+# Add 'dependencies' label to any change to dependency files.
+dependencies:
+- package-lock.json
+- yarn.lock
+- npm-shrinkwrap.json
+- composer.lock
+
+# Add 'github_actions' label to any change to GitHub Actions code.
+github_actions:
+- .github/workflows/*
+- .github/actions/*
+- .github/*.yml
