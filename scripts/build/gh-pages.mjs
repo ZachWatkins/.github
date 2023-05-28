@@ -101,14 +101,14 @@ async function buildMarkdownWebpage(index, fileMap, directory, page) {
 
     marked.parse(content, { mangle: false }).then((markdownHtml) => {
 
-        const html = applyTemplate(markdownHtml, page, destination, fileMap)
+        markdownHtml = applyTemplate(markdownHtml, page, destination, fileMap)
         const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
 
         if (!fs.existsSync(destDirectory)) {
             fs.mkdirSync(destDirectory, { recursive: true })
         }
 
-        fs.writeFileSync(destination, html)
+        fs.writeFileSync(destination, markdownHtml)
 
     })
 
