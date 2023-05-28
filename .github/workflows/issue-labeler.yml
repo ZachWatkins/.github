@@ -1,0 +1,25 @@
+name: Triage new issues
+
+# **What it does**: Add the 'triage' label to new issues in the open source repository.
+# **Why we have it**: We want to make sure that new issues are triaged and assigned to the right team.
+# **Who does it impact**: Docs open source.
+
+on:
+  issues:
+    types: [opened, reopened, edited]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  triage_issues:
+    if: ${{ github.repository == 'zachwatkins/.github' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: github/issue-labeler@v3.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/issue-labeler.yml
+          include-title: 1
+          enable-versioned-regex: 0
