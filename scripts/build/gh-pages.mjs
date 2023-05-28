@@ -26,16 +26,6 @@ function build({ markdown, assets, directory }) {
         fs.rmSync(directory, { recursive: true })
     }
 
-    for (let i = 0; i < markdown.length; i++) {
-
-        queue.push(new Promise((resolve) => {
-
-            resolve(MarkdownWebpageFactory.build(markdown[i], directory))
-
-        }))
-
-    }
-
     for (let i = 0; i < assets.length; i++) {
 
         queue.push(new Promise((resolve) => {
@@ -49,6 +39,16 @@ function build({ markdown, assets, directory }) {
             }
 
             resolve(fs.copyFileSync(source, destination))
+
+        }))
+
+    }
+
+    for (let i = 0; i < markdown.length; i++) {
+
+        queue.push(new Promise((resolve) => {
+
+            resolve(MarkdownWebpageFactory.build(markdown[i], directory))
 
         }))
 
@@ -182,7 +182,7 @@ const MarkdownWebpageFactory = {
      * Apply a webpage template to the Markdown content.
      * @param {string} markdownHtml - The HTML generated from the Markdown content.
      * @param {string} template - The template to apply.
-     * @returns
+     * @returns {string} The HTML with the template applied.
      */
     applyTemplate: function (markdownHtml, template) {
 
