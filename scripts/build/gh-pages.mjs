@@ -65,7 +65,9 @@ const MarkdownWebpageFactory = {
      * @returns {Object} The template object.
      */
     template: function(depth = 0) {
+
         const relativeRootDirectoryPrefix = !depth ? './' : '../'.repeat(depth)
+
         return {
             pre: `<!doctype html>
                 <html lang="en-US">
@@ -93,7 +95,9 @@ const MarkdownWebpageFactory = {
                     <body class="markdown-body">`,
             post: `</body></html>`,
         }
+
     },
+
     /**
      * Builds a web page from a Markdown file.
      * @param {string} source - Path to the Markdown file to build.
@@ -121,6 +125,7 @@ const MarkdownWebpageFactory = {
         })
 
     },
+
     /**
      * Format a Markdown file path into a destination HTML file path.
      * Files in the "content" directory will not include that directory in their destination path.
@@ -130,12 +135,17 @@ const MarkdownWebpageFactory = {
      * @returns {string} Directory where the file should be copied to as `index.html`.
      */
     getRoute: function (path) {
+
         path = path.toLowerCase()
+
         if ('readme.md' !== path) {
             return path.toLowerCase().replaceAll('_', '-').replace(/^content\//, '').replace(/\.md$/, '') + '/'
         }
+
         return ''
+
     },
+
     /**
      * Apply a webpage template to the Markdown content.
      * @param {string} markdownHtml - The HTML generated from the Markdown content.
@@ -143,7 +153,9 @@ const MarkdownWebpageFactory = {
      * @returns
      */
     applyTemplate: function (markdownHtml, template) {
+
         return template.pre + markdownHtml + template.post
+
     }
 }
 
