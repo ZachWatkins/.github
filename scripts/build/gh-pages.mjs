@@ -59,24 +59,23 @@ function build({ markdown, assets, directory, page }) {
     }
 
     for (let i = 0; i < assets.length; i++) {
-        queue.push(copyFile(assets[i][0], assets[i][1], directory))
-    }
-}
 
-/**
- * Copies a file from one location to another.
- * @param {string} source - The path to the source file.
- * @param {string} destination - The path to the destination file.
- * @param {string} directory - The directory to copy the file to.
- * @returns {Promise} A promise that resolves when the file has been copied.
- */
-async function copyFile(source, destination, directory) {
-    destination = directory + '/' + destination
-    const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
-    if (!fs.existsSync(destDirectory)) {
-        fs.mkdirSync(destDirectory, { recursive: true })
+        queue.push(new Promise((resolve) => {
+
+            const destDirectory = directory + '/' + assets[i][1].substring(0, assets[i][1].lastIndexOf('/'))
+
+            if (!fs.existsSync(destDirectory)) {
+                fs.mkdirSync(destDirectory, { recursive: true })
+            }
+
+            resolve(fs.copyFileSync(assets[i][0], directory + '/' + assets[i][1]))
+
+        }))
+
     }
-    fs.copyFileSync(source, destination)
+
+    Promise.all(queue)
+
 }
 
 /**
