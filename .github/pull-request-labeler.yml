@@ -1,8 +1,8 @@
 # Add labels to new pull requests based on the changed file names and paths.
 # https://github.com/marketplace/actions/labeler
 
-# Add 'triage' label to every new pull request.
-triage:
+# Add 'waiting for review' label to every new pull request event.
+'waiting for review':
 - '*'
 - '**/*'
 
