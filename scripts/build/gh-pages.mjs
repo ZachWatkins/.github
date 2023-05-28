@@ -138,7 +138,6 @@ const MarkdownWebpageFactory = {
         let markdownRef = this.getMarkdownFileReference(html)
         while (markdownRef) {
             let newRef = this.getRoute(markdownRef[1], destination)
-            console.log(markdownRef[1], newRef)
             if (markdownRef[2]) {
                 newRef += markdownRef[2]
             }
