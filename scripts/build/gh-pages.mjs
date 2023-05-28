@@ -10,186 +10,186 @@ import { gfmHeadingId } from 'marked-gfm-heading-id'
 marked.use({ gfm: true, async: true })
 marked.use(gfmHeadingId())
 
-const templateParts = {
-    pre: `<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./styles/github-markdown-css/github-markdown.css">
-        <title>README</title>
-        <style>
-            .markdown-body {
-                box-sizing: border-box;
-                min-width: 200px;
-                max-width: 980px;
-                margin: 0 auto;
-                padding: 45px;
-            }
-
-            @media (max-width: 767px) {
-                .markdown-body {
-                    padding: 15px;
-                }
-            }
-        </style>
-    </head>
-    <body class="markdown-body">`,
-    navigation: ['<ul>', '</ul>'],
-    post: `</body>
-</html>`,
-}
-
 /**
  * Builds a set of web pages from Markdown files and copies assets to a specified directory.
  * @param {Object} options - The build options.
  * @param {Array} options.markdown - An array of Markdown files to build.
  * @param {Array} options.assets - An array of asset files to copy.
  * @param {string} options.directory - The directory to output the built files to.
- * @param {Object} [options.page] - An object containing template parts to use for the built pages.
  * @returns {void}
  */
-function build({ markdown, assets, directory, page }) {
-    page = page ? { ...templateParts, ...page } : templateParts
+function build({ markdown, assets, directory }) {
 
     const queue = []
 
-    for (let i = 0; i < markdown.length; i++) {
-        queue.push(buildMarkdownWebpage(i, markdown, directory, page))
+    if (fs.existsSync(directory)) {
+        fs.rmSync(directory, { recursive: true })
     }
 
     for (let i = 0; i < assets.length; i++) {
-        queue.push(copyFile(assets[i][0], assets[i][1], directory))
+
+        queue.push(new Promise((resolve) => {
+
+            const source = assets[i][0]
+            const destination = directory + '/' + assets[i][1]
+            const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
+
+            if (!fs.existsSync(destDirectory)) {
+                fs.mkdirSync(destDirectory, { recursive: true })
+            }
+
+            resolve(fs.copyFileSync(source, destination))
+
+        }))
+
     }
+
+    for (let i = 0; i < markdown.length; i++) {
+
+        queue.push(new Promise((resolve) => {
+
+            resolve(MarkdownWebpageFactory.build(markdown[i], directory))
+
+        }))
+
+    }
+
+    Promise.all(queue)
+
 }
 
-/**
- * Copies a file from one location to another.
- * @param {string} source - The path to the source file.
- * @param {string} destination - The path to the destination file.
- * @param {string} directory - The directory to copy the file to.
- * @returns {Promise} A promise that resolves when the file has been copied.
- */
-async function copyFile(source, destination, directory) {
-    destination = directory + '/' + destination
-    const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
-    if (!fs.existsSync(destDirectory)) {
-        fs.mkdirSync(destDirectory, { recursive: true })
-    }
-    fs.copyFileSync(source, destination)
-}
+const MarkdownWebpageFactory = {
+    /**
+     * Get the template object used to convert a Markdown file to a web page.
+     * @param {number} depth - The depth of the web page file in the directory structure.
+     * @returns {Object} The template object.
+     */
+    template: function(depth = 0) {
 
-/**
- * Builds a web page from a Markdown file.
- * @param {number} index - The index of the Markdown file entry within the fileMap array.
- * @param {[string[]]} fileMap - An array of Markdown files and their destination HTML file path.
- * @param {string} directory - The directory to output the built files to.
- * @param {Object} page - An object containing template parts to use for the built page.
- * @returns {Promise} A promise that resolves when the page has been built.
- */
-async function buildMarkdownWebpage(index, fileMap, directory, page) {
+        const relativeRootDirectoryPrefix = !depth ? './' : '../'.repeat(depth)
 
-    const source = fileMap[index][0]
-    const destination = directory + '/' + fileMap[index][1]
+        return {
+            pre: `<!doctype html>
+                <html lang="en-US">
+                    <head>
+                        <meta charset="utf-8"/>
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <link rel="stylesheet" href="${relativeRootDirectoryPrefix}styles/github-markdown-css/github-markdown.css">
+                        <title>README</title>
+                        <style>
+                            .markdown-body {
+                                box-sizing: border-box;
+                                min-width: 200px;
+                                max-width: 980px;
+                                margin: 0 auto;
+                                padding: 45px;
+                            }
 
-    const content = fs.readFileSync(source, 'utf8')
-
-    marked.parse(content, { mangle: false }).then((markdownHtml) => {
-
-        const html = applyTemplate(markdownHtml, page, destination, fileMap)
-
-        const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
-
-        if (!fs.existsSync(destDirectory)) {
-            fs.mkdirSync(destDirectory, { recursive: true })
+                            @media (max-width: 767px) {
+                                .markdown-body {
+                                    padding: 15px;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body class="markdown-body">`,
+            post: `</body></html>`,
         }
 
-        fs.writeFileSync(destination, html)
-    })
+    },
 
-}
+    /**
+     * Builds a web page from a Markdown file.
+     * @param {string} source - Path to the Markdown file to build.
+     * @param {string} newRoot - New root directory for the built page.
+     * @returns {Promise} A promise that resolves when the page has been built.
+     */
+    build: function (source, newRoot) {
 
-/**
- * Apply a webpage template to the Markdown content.
- * @param {string} markdownHtml
- * @param {string} template
- * @param {string} destination
- * @param {[string[]]} fileMap
- * @returns
- */
-function applyTemplate(markdownHtml, template, destination, fileMap) {
+        const route = this.getRoute(source)
+        const depth = route.split('/').length - 1
+        const destDirectory = newRoot + '/' + route
+        const destination = destDirectory + 'index.html'
+        const content = fs.readFileSync(source, 'utf8')
 
-    let html = relinkFileRoutes(markdownHtml, fileMap)
-    html = pathIsDeep(destination)
-        ? setStylesheetDepth(template.pre, pathDepth(destination)) + html
-        : template.pre + html
-    html += template.post
-    return html
+        marked.parse(content, { mangle: false }).then((markdownHtml) => {
 
-}
+            markdownHtml = this.applyTemplate(markdownHtml, this.template(depth))
+            markdownHtml = this.replaceMarkdownFileReferences(markdownHtml, destination)
 
-// Update markdown file references to html file references for this repository's files being built for GitHub Pages.
-function relinkFileRoutes(html, fileMap) {
+            if (!fs.existsSync(destDirectory)) {
+                fs.mkdirSync(destDirectory, { recursive: true })
+            }
 
-    for (let i = 0; i < fileMap.length; i++) {
-        const source = fileMap[i][0]
-        const position = html.indexOf(`href="./${source}"`)
-        if (position > -1) {
-            const destination = fileMap[i][1]
-            html = html.replaceAll(`href="./${source}"`, `href="./${destination}"`)
+            fs.writeFileSync(destination, markdownHtml)
+
+        })
+
+    },
+
+    /**
+     * Replace Markdown file references with HTML file references.
+     * @param {string} html - The HTML to search.
+     * @param {string} destination - The destination of the HTML file.
+     * @returns {string} The HTML with the Markdown file references replaced.
+     */
+    replaceMarkdownFileReferences: function (html, destination) {
+
+        let markdownRef = this.getMarkdownFileReference(html)
+        while (markdownRef) {
+            let newRef = this.getRoute(markdownRef[1], destination)
+            if (markdownRef[2]) {
+                newRef += markdownRef[2]
+            }
+            html = html.replace(markdownRef[0], `href="${newRef}"`)
+            markdownRef = this.getMarkdownFileReference(html)
         }
+
+        return html
+
+    },
+
+    /**
+     * Format a Markdown file path into a destination HTML file path.
+     * Files in the "content" directory will not include that directory in their destination path.
+     * Files without a file extension will be treated as markdown files.
+     * Underscores will be replaced with hyphens.
+     * @param {string} path - Markdown file path.
+     * @param {string} [documentPath] - Path to the document that contains the Markdown file path.
+     * @returns {string} Directory where the file should be copied to as `index.html`.
+     */
+    getRoute: function (path, documentPath) {
+
+        path = path.toLowerCase()
+
+        if ('readme.md' !== path) {
+            return path.toLowerCase().replaceAll('_', '-').replace(/^(\.\/)?content\//, '').replace(/\.md$/, '') + '/'
+        }
+
+        return !documentPath ? '' : '../'
+
+    },
+
+    /**
+     * Get the first Markdown file reference from the HTML string.
+     * @param {string} html - The HTML to search.
+     * @returns {string} The first Markdown file reference.
+     */
+    getMarkdownFileReference: function (html) {
+        return html.match(/\bhref="(?!#)(?!http)([^"]+\.md)(#[a-zA-Z0-9\-_]+)?"/)
+    },
+
+    /**
+     * Apply a webpage template to the Markdown content.
+     * @param {string} markdownHtml - The HTML generated from the Markdown content.
+     * @param {string} template - The template to apply.
+     * @returns {string} The HTML with the template applied.
+     */
+    applyTemplate: function (markdownHtml, template) {
+
+        return template.pre + markdownHtml + template.post
+
     }
-
-    // Also relink any relative links to other markdown files.
-    html = html.replaceAll(/href="(\.\/[^"]+)\.md"/g, 'href="$1.html"')
-
-    return html
-
-}
-
-/**
- * Update CSS stylesheet link for nested routes.
- * @param {string} html - The HTML to update.
- * @param {number} depth - The depth of the HTML file.
- * @returns {string} The updated HTML.
- */
-function setStylesheetDepth(html, depth) {
-
-    return html.replace(
-        'href="./styles/github-markdown-css/github-markdown.css"',
-        `href="${'../'.repeat(depth - 1)}styles/github-markdown-css/github-markdown.css"`
-    )
-
-}
-
-/**
- * Detect whether a given path is nested.
- * @param {string} path - The path to check.
- * @returns {boolean} Whether the path is nested.
- */
-function pathIsDeep(path) {
-
-    if (0 === path.indexOf('./')) {
-        return path.substring(2).split('/').length > 1
-    }
-
-    return path.split('/').length > 1
-
-}
-
-/**
- * Get a zero-based depth of the given file path.
- * @param {string} path - The path to evaluate.
- * @returns {number} The zero-based depth of the path.
- */
-function pathDepth(path) {
-
-    if (0 === path.indexOf('./')) {
-        return path.substring(2).split('/').length - 1
-    }
-
-    return path.split('/').length - 1
-
 }
 
 export default build
