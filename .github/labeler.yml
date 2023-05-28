@@ -30,3 +30,9 @@ dependencies:
 - yarn.lock
 - npm-shrinkwrap.json
 - composer.lock
+
+# Add 'github_actions' label to any change to GitHub Actions code.
+github_actions:
+- .github/workflows/*
+- .github/actions/*
+- .github/*.yml
