@@ -97,13 +97,11 @@ async function buildMarkdownWebpage(index, fileMap, directory, page) {
 
     const source = fileMap[index][0]
     const destination = directory + '/' + fileMap[index][1]
-
     const content = fs.readFileSync(source, 'utf8')
 
     marked.parse(content, { mangle: false }).then((markdownHtml) => {
 
         const html = applyTemplate(markdownHtml, page, destination, fileMap)
-
         const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
 
         if (!fs.existsSync(destDirectory)) {
@@ -111,6 +109,7 @@ async function buildMarkdownWebpage(index, fileMap, directory, page) {
         }
 
         fs.writeFileSync(destination, html)
+
     })
 
 }
