@@ -128,7 +128,7 @@ function applyTemplate(markdownHtml, template, destination, fileMap) {
 
 }
 
-// Update markdown file references to html file references for this repository's files being build for GitHub Pages.
+// Update markdown file references to html file references for this repository's files being built for GitHub Pages.
 function relinkFileRoutes(html, fileMap) {
 
     for (let i = 0; i < fileMap.length; i++) {
@@ -139,6 +139,9 @@ function relinkFileRoutes(html, fileMap) {
             html = html.replaceAll(`href="./${source}"`, `href="./${destination}"`)
         }
     }
+
+    // Also relink any relative links to other markdown files.
+    html = html.replaceAll(/href="(\.\/[^"]+)\.md"/g, 'href="$1.html"')
 
     return html
 
