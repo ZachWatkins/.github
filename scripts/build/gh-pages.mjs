@@ -115,7 +115,7 @@ const MarkdownWebpageFactory = {
         marked.parse(content, { mangle: false }).then((markdownHtml) => {
 
             markdownHtml = this.applyTemplate(markdownHtml, this.template(depth))
-            markdownHtml = this.replaceMarkdownFileReferences(markdownHtml)
+            markdownHtml = this.replaceMarkdownFileReferences(markdownHtml, destination)
 
             if (!fs.existsSync(destDirectory)) {
                 fs.mkdirSync(destDirectory, { recursive: true })
@@ -130,13 +130,14 @@ const MarkdownWebpageFactory = {
     /**
      * Replace Markdown file references with HTML file references.
      * @param {string} html - The HTML to search.
+     * @param {string} destination - The destination of the HTML file.
      * @returns {string} The HTML with the Markdown file references replaced.
      */
-    replaceMarkdownFileReferences: function (html) {
+    replaceMarkdownFileReferences: function (html, destination) {
 
         let markdownRef = this.getMarkdownFileReference(html)
         while (markdownRef) {
-            let newRef = this.getRoute(markdownRef[1])
+            let newRef = this.getRoute(markdownRef[1], destination)
             console.log(markdownRef[1], newRef)
             if (markdownRef[2]) {
                 newRef += markdownRef[2]
@@ -155,9 +156,10 @@ const MarkdownWebpageFactory = {
      * Files without a file extension will be treated as markdown files.
      * Underscores will be replaced with hyphens.
      * @param {string} path - Markdown file path.
+     * @param {string} [documentPath] - Path to the document that contains the Markdown file path.
      * @returns {string} Directory where the file should be copied to as `index.html`.
      */
-    getRoute: function (path) {
+    getRoute: function (path, documentPath) {
 
         path = path.toLowerCase()
 
@@ -165,7 +167,7 @@ const MarkdownWebpageFactory = {
             return path.toLowerCase().replaceAll('_', '-').replace(/^(\.\/)?content\//, '').replace(/\.md$/, '') + '/'
         }
 
-        return ''
+        return !documentPath ? '' : '../'
 
     },
 
