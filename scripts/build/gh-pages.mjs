@@ -50,12 +50,19 @@ const templateParts = {
  * @returns {void}
  */
 function build({ markdown, assets, directory, page }) {
+
     page = page ? { ...templateParts, ...page } : templateParts
 
     const queue = []
 
     for (let i = 0; i < markdown.length; i++) {
-        queue.push(buildMarkdownWebpage(i, markdown, directory, page))
+
+        queue.push(new Promise((resolve) => {
+
+            resolve(buildMarkdownWebpage(i, markdown, directory, page))
+
+        }))
+
     }
 
     for (let i = 0; i < assets.length; i++) {
