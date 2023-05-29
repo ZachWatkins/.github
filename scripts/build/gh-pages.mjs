@@ -59,6 +59,14 @@ function build({ markdown, assets, directory }) {
 }
 
 const MarkdownWebpageFactory = {
+
+    /**
+     * List words that should be lowercase in page titles.
+     * @type {Array}
+     * @private
+     */
+    lowercaseWords: ['a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'from', 'in', 'into', 'nor', 'of', 'on', 'or', 'so', 'the', 'to', 'with'],
+
     /**
      * Builds a web page from a Markdown file.
      * @param {string} source - Path to the Markdown file to build.
@@ -100,8 +108,6 @@ const MarkdownWebpageFactory = {
             return 'Home'
         }
 
-        const lowercaseWords = ['a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'from', 'in', 'into', 'nor', 'of', 'on', 'or', 'so', 'the', 'to', 'with']
-
         return path
             .replace(/index\.html$/, '')
             .replace(/\/$/, '')
@@ -113,7 +119,7 @@ const MarkdownWebpageFactory = {
             .split(' ')
             .map((word) => {
                 const lower = word.toLowerCase()
-                if (lowercaseWords.includes(lower)) {
+                if (this.lowercaseWords.includes(lower)) {
                     return lower
                 }
                 return word.charAt(0).toUpperCase() + word.slice(1)
