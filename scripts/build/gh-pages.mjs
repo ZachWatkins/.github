@@ -98,7 +98,7 @@ const MarkdownWebpageFactory = {
     },
 
     /**
-     * Convert a file path into a web page title.
+     * Convert a file path into a web page title using title case.
      * @param {string} path - File path.
      * @returns {string} The page title.
      */
