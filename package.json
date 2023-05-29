@@ -10,7 +10,8 @@
   "scripts": {
     "start": "vite --host 127.0.0.1 --port 3000",
     "test": "echo \"Error: no test specified\" && exit 0",
-    "test-ui": "playwright test --ui",
+    "playwright-test": "playwright test --project=\"Google Chrome\"",
+    "playwright-test-ui": "playwright test --ui",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "node scripts/build/index.mjs",
