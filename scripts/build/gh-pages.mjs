@@ -60,45 +60,6 @@ function build({ markdown, assets, directory }) {
 
 const MarkdownWebpageFactory = {
     /**
-     * Get the template object used to convert a Markdown file to a web page.
-     * @param {number} depth - The depth of the web page file in the directory structure.
-     * @returns {Object} The template object.
-     */
-    template: function(depth = 0) {
-
-        const relativeRootDirectoryPrefix = !depth ? './' : '../'.repeat(depth)
-
-        return {
-            pre: `<!doctype html>
-                <html lang="en-US">
-                    <head>
-                        <meta charset="utf-8"/>
-                        <meta name="viewport" content="width=device-width, initial-scale=1">
-                        <link rel="stylesheet" href="${relativeRootDirectoryPrefix}styles/github-markdown-css/github-markdown.css">
-                        <title>README</title>
-                        <style>
-                            .markdown-body {
-                                box-sizing: border-box;
-                                min-width: 200px;
-                                max-width: 980px;
-                                margin: 0 auto;
-                                padding: 45px;
-                            }
-
-                            @media (max-width: 767px) {
-                                .markdown-body {
-                                    padding: 15px;
-                                }
-                            }
-                        </style>
-                    </head>
-                    <body class="markdown-body">`,
-            post: `</body></html>`,
-        }
-
-    },
-
-    /**
      * Builds a web page from a Markdown file.
      * @param {string} source - Path to the Markdown file to build.
      * @param {string} newRoot - New root directory for the built page.
@@ -110,11 +71,12 @@ const MarkdownWebpageFactory = {
         const depth = route.split('/').length - 1
         const destDirectory = newRoot + '/' + route
         const destination = destDirectory + 'index.html'
+        const pageTitle = this.parsePageTitle(route)
         const content = fs.readFileSync(source, 'utf8')
 
         marked.parse(content, { mangle: false }).then((markdownHtml) => {
 
-            markdownHtml = this.applyTemplate(markdownHtml, this.template(depth))
+            markdownHtml = this.applyTemplate(markdownHtml, depth, pageTitle)
             markdownHtml = this.replaceMarkdownFileReferences(markdownHtml, destination)
 
             if (!fs.existsSync(destDirectory)) {
@@ -124,6 +86,39 @@ const MarkdownWebpageFactory = {
             fs.writeFileSync(destination, markdownHtml)
 
         })
+
+    },
+
+    /**
+     * Convert a file path into a web page title.
+     * @param {string} path - File path.
+     * @returns {string} The page title.
+     */
+    parsePageTitle: function (path) {
+
+        if (!path) {
+            return 'Home'
+        }
+
+        const lowercaseWords = ['a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'from', 'in', 'into', 'nor', 'of', 'on', 'or', 'so', 'the', 'to', 'with']
+
+        return path
+            .replace(/index\.html$/, '')
+            .replace(/\/$/, '')
+            .replace(/\.html$/, '')
+            .replaceAll('-', ' ')
+            .replaceAll('_', ' ')
+            .split('/')
+            .pop()
+            .split(' ')
+            .map((word) => {
+                const lower = word.toLowerCase()
+                if (lowercaseWords.includes(lower)) {
+                    return lower
+                }
+                return word.charAt(0).toUpperCase() + word.slice(1)
+            })
+            .join(' ')
 
     },
 
@@ -180,12 +175,62 @@ const MarkdownWebpageFactory = {
     },
 
     /**
+     * Get the template object used to convert a Markdown file to a web page.
+     * @param {Object} options - The template options.
+     * @param {number} options.depth - The depth of the web page file in the directory structure.
+     * @param {string} options.title - The title of the web page.
+     * @returns {Object} The template object.
+     */
+    template: function({ depth, title }) {
+
+        if (!title || 'Home' === title) {
+            title = 'GitHub Guide'
+        } else {
+            title = title + ' - GitHub Guide'
+        }
+
+        const relativeRootDirectoryPrefix = !depth ? './' : '../'.repeat(depth)
+
+        return {
+            pre: `<!doctype html>
+                <html lang="en-US">
+                    <head>
+                        <meta charset="utf-8"/>
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <link rel="stylesheet" href="${relativeRootDirectoryPrefix}styles/github-markdown-css/github-markdown.css">
+                        <title>${title}</title>
+                        <style>
+                            .markdown-body {
+                                box-sizing: border-box;
+                                min-width: 200px;
+                                max-width: 980px;
+                                margin: 0 auto;
+                                padding: 45px;
+                            }
+
+                            @media (max-width: 767px) {
+                                .markdown-body {
+                                    padding: 15px;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body class="markdown-body">`,
+            post: `</body></html>`,
+        }
+
+    },
+
+    /**
      * Apply a webpage template to the Markdown content.
      * @param {string} markdownHtml - The HTML generated from the Markdown content.
-     * @param {string} template - The template to apply.
+     * @param {number} depth - The depth of the web page file in the directory structure.\
+     * @param {string} title - The title of the web page.
      * @returns {string} The HTML with the template applied.
      */
-    applyTemplate: function (markdownHtml, template) {
+    applyTemplate: function (markdownHtml, depth, title) {
+
+        const template = this.template({ depth, title })
 
         return template.pre + markdownHtml + template.post
 
