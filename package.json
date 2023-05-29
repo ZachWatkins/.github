@@ -8,7 +8,7 @@
   },
   "private": true,
   "scripts": {
-    "start": "npm run build",
+    "start": "vite --host 127.0.0.1 --port 3000",
     "test": "echo \"Error: no test specified\" && exit 0",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
