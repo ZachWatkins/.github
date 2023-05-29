@@ -13,6 +13,13 @@ test('has documentation link', async ({ page }) => {
     // Click the get started link.
     await page.getByRole('link', { name: 'GitHub Pages' }).click();
 
-    // Expects the URL to contain intro.
-    await expect(page).toHaveURL(/.*gh-pages/);
+    // Expects the URL to contain gh-pages.
+    await expect(page).toHaveURL(/.*gh-pages\//);
+
+    // Click the New Repository Configuration link.
+    await page.getByRole('link', { name: 'New Repository Configuration' }).click();
+
+    // Expects the URL to contain gh-pages.
+    await expect(page).toHaveURL(/.*gh-pages\/new-repository-configuration\//);
+
 });
