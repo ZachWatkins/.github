@@ -12,7 +12,7 @@ on:
         type: string
 
 jobs:
-  lint_php:
+  lint-php:
     if: github.repository == 'zachwatkins/.github'
     runs-on: ubuntu-latest
     steps:
