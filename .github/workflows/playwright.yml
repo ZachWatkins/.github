@@ -1,0 +1,54 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [ trunk, main, master ]
+    paths:
+      - '**.js'
+      - '**.mjs'
+      - '**.ts'
+      - '**.tsx'
+      - '**.md'
+      - package.json
+      - package-lock.json
+      - .github/workflows/playwright.yml
+  pull_request:
+    branches: [ trunk, main, master ]
+    paths:
+      - '**.js'
+      - '**.mjs'
+      - '**.ts'
+      - '**.tsx'
+      - '**.md'
+      - package.json
+      - package-lock.json
+      - .github/workflows/playwright.yml
+
+permissions:
+  contents: read
+
+# This allows a subsequently queued workflow run to interrupt previous runs.
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  test:
+    if: github.repository == 'zachwatkins/.github'
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ./.github/actions/node-npm-setup
+
+    - name: Run build script
+      run: npm run build
+
+    - name: Run Playwright tests
+      run: npm run playwright-test -- --reporter list
+
+    - uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30

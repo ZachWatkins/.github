@@ -25,4 +25,9 @@ runs:
     - name: Install dependencies
       if: ${{ steps.cache-node_modules.outputs.cache-hit != 'true' }}
       shell: bash
-      run: npm ci
+      env:
+        # This makes it so the puppeteer npm package doesn't bother
+        # to download a copy of chromium because it can use
+        # `$PUPPETEER_EXECUTABLE_PATH` from the ubuntu Action container.
+        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+      run: npm ci --include=optional
