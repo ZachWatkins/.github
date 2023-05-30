@@ -23,6 +23,9 @@ on:
       - package-lock.json
       - .github/workflows/playwright.yml
 
+permissions:
+  contents: read
+
 jobs:
   test:
     if: github.repository == 'zachwatkins/.github'
