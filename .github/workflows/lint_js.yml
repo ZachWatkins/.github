@@ -29,7 +29,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint-code:
+  lint-js:
     if: github.repository == 'zachwatkins/.github'
     runs-on: 'ubuntu-latest'
     steps:
