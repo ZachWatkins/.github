@@ -1,16 +1,5 @@
 name: Playwright Tests
 on:
-  push:
-    branches: [ trunk, main, master ]
-    paths:
-      - '**.js'
-      - '**.mjs'
-      - '**.ts'
-      - '**.tsx'
-      - '**.md'
-      - package.json
-      - package-lock.json
-      - .github/workflows/playwright.yml
   pull_request:
     branches: [ trunk, main, master ]
     paths:
