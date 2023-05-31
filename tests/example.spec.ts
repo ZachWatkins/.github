@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test('has title', async ({ page }) => {
     await page.goto('http://localhost:3000');
@@ -25,4 +26,14 @@ test('has markdown page link', async ({ page }) => {
 
     // Expects the URL to contain gh-pages.
     await expect(page).toHaveURL(/.*gh-pages\/new-repository-configuration\//);
+});
+
+test.describe('homepage', () => {
+    test('should not have any automatically detectable accessibility issues', async ({ page }) => {
+        await page.goto('http://localhost:3000/gh-pages/');
+
+        const accessibilityScanResults = await new AxeBuilder({ page }).analyze(); // 4
+
+        expect(accessibilityScanResults.violations).toEqual([]); // 5
+    });
 });
