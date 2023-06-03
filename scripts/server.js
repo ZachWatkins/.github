@@ -1,10 +1,18 @@
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
+let quietMode = false
 
 const PUBLIC_DIR = path.join(__dirname, 'gh-pages')
 
-function start(port) {
+/**
+ * Start a web server.
+ * @param {number} port - The port to listen on.
+ * @param {boolean} [quiet=false] - Whether to log messages.
+ * @returns {Promise<http.Server>}
+ */
+function start(port, quiet = false) {
+    quietMode = quiet
     const server = http.createServer((req, res) => {
         const filePath = path.join(PUBLIC_DIR, req.url === '/' ? 'index.html' : req.url)
         const extname = path.extname(filePath)
@@ -28,7 +36,9 @@ function start(port) {
 
     return new Promise((resolve) => {
         server.listen(port, () => {
-            console.log(`Server running on port ${port}`)
+            if (!quietMode) {
+                console.log(`Server running on port ${port}`)
+            }
             resolve(server)
         })
     })
@@ -37,7 +47,9 @@ function start(port) {
 function stop(server) {
     return new Promise((resolve) => {
         server.close(() => {
-            console.log('Server stopped')
+            if (!quietMode) {
+                console.log('Server stopped')
+            }
             resolve()
         })
     })
