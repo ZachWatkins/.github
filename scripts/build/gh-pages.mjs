@@ -214,6 +214,10 @@ const MarkdownWebpageFactory = {
                                 padding: 45px;
                             }
 
+                            .markdown-body a {
+                                text-decoration: underline;
+                            }
+
                             @media (max-width: 767px) {
                                 .markdown-body {
                                     padding: 15px;
