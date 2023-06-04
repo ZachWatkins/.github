@@ -12,11 +12,14 @@ let quietMode = false
 function start(port, quiet = false) {
     quietMode = quiet
     const server = http.createServer((req, res) => {
-        if (req.url.matchAll(/\./g).length > 1) {
-            throw new Error('URL cannot contain more than one "." character')
-        }
-        if (req.url.indexOf('\\') > -1) {
-            throw new Error('URL cannot contain directory separators')
+
+        // URL must start with a "/" character and be alphanumeric with optional hyphens and underscores.
+        if (!/^\/[a-z0-9/-_]*$/.test(req.url)) {
+            res.writeHead(500)
+            res.end('500 Internal Server Error')
+            if (!quiet) {
+                console.error('URL must be alphanumeric')
+            }
         }
 
         const filePath = req.url === '/' ? 'index.html' : req.url
