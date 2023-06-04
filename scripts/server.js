@@ -2,32 +2,31 @@ const http = require('http')
 const fs = require('fs')
 const path = require('path')
 let quietMode = false
+const urlRegex = /^\/([a-zA-Z0-9_-]+\/?)*$/
 
 /**
  * Start a web server.
  * @param {number} port - The port to listen on.
- * @param {boolean} [quiet=false] - Whether to log messages.
+ * @param {boolean} [quiet=true] - Whether to log messages.
  * @returns {Promise<http.Server>}
  */
-function start(port, quiet = false) {
+function start(port, quiet = true) {
     quietMode = quiet
     const server = http.createServer((req, res) => {
 
-        // URL must start with a "/" character and be alphanumeric with optional hyphens and underscores.
-        if (!/^\/([a-zA-Z0-9_-]+\/?)*$/.test(req.url)) {
-            res.writeHead(500)
-            res.end('500 Internal Server Error')
+        if (!urlRegex.test(req.url)) {
+            res.writeHead(400)
+            res.end('Invalid URL')
             if (!quiet) {
                 console.error('URL must be alphanumeric')
             }
         }
 
-        const basePath = path.resolve(__dirname, '..')
-        const filePath = req.url === '/' ? 'index.html' : req.url
+        const filePath = path.resolve(__dirname, '..') + path.join(req.url, 'index.html')
         const extname = path.extname(filePath)
         const contentType = getContentType(extname)
 
-        fs.readFile(path.join(basePath, filePath), (err, content) => {
+        fs.readFile(filePath, (err, content) => {
             if (err) {
                 if (err.code === 'ENOENT') {
                     res.writeHead(404)
