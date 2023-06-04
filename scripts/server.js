@@ -2,7 +2,42 @@ const http = require('http')
 const fs = require('fs')
 const path = require('path')
 let quietMode = false
-const urlRegex = /^\/([a-zA-Z0-9_-]+\/?)*$/
+
+/**
+ * Validate a URL request for the server.
+ * @param {string} input - The URL to validate.
+ * @returns {boolean} - Whether the URL is valid.
+ */
+function validateUrl (input) {
+    const urlRegex = /^\/([a-zA-Z0123456789_-]+\/?)*([a-zA-Z0123456789_-]+\.[a-z0123456789]+)?$/
+    return urlRegex.test(input)
+}
+
+/**
+ * Sanitize a URL request for the server.
+ * @param {string} input - The URL to validate.
+ * @returns {string} - The sanitized URL.
+ */
+function sanitizeUrl (input) {
+    if (typeof input !== 'string') {
+        throw new Error('URL must be a string')
+    }
+    const illegalRe = /[?<>:*|"]/g
+    const controlRe = /[\x00-\x1f\x80-\x9f]/g //eslint-disable-line no-control-regex
+    const reservedRe = /^\.+$/
+    const windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i
+    const windowsTrailingRe = /[. ]+$/
+    const sanitized = input
+        .replace(illegalRe, '')
+        .replace(controlRe, '')
+        .replace(reservedRe, '')
+        .replace(windowsReservedRe, '')
+        .replace(windowsTrailingRe, '')
+        .trim()
+        .substring(0, 254)
+
+    return sanitized !== input ? '' : sanitized
+}
 
 /**
  * Start a web server.
@@ -14,15 +49,16 @@ function start(port, quiet = true) {
     quietMode = quiet
     const server = http.createServer((req, res) => {
 
-        if (!urlRegex.test(req.url)) {
+        if (!validateUrl(req.url)) {
             res.writeHead(400)
             res.end('Invalid URL')
-            if (!quiet) {
-                console.error('URL must be alphanumeric')
-            }
         }
 
-        const filePath = path.resolve(__dirname, '..') + path.join(req.url, 'index.html')
+        const sanitizedUrl = sanitizeUrl(req.url)
+        const suffix = '/' === sanitizedUrl.charAt(sanitizedUrl.length - 1)
+            ? 'index.html'
+            : ''
+        const filePath = path.resolve(__dirname, '..') + path.sep + sanitizedUrl + suffix
         const extname = path.extname(filePath)
         const contentType = getContentType(extname)
 
