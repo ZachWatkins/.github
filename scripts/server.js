@@ -14,7 +14,7 @@ function start(port, quiet = false) {
     const server = http.createServer((req, res) => {
 
         // URL must start with a "/" character and be alphanumeric with optional hyphens and underscores.
-        if (!/^\/[a-z0-9/-_]*$/.test(req.url)) {
+        if (!/^\/([a-zA-Z0-9_-]+\/?)*$/.test(req.url)) {
             res.writeHead(500)
             res.end('500 Internal Server Error')
             if (!quiet) {
@@ -22,11 +22,12 @@ function start(port, quiet = false) {
             }
         }
 
+        const basePath = path.resolve(__dirname, '..')
         const filePath = req.url === '/' ? 'index.html' : req.url
         const extname = path.extname(filePath)
         const contentType = getContentType(extname)
 
-        fs.readFile(path.join(__dirname, filePath), (err, content) => {
+        fs.readFile(path.join(basePath, filePath), (err, content) => {
             if (err) {
                 if (err.code === 'ENOENT') {
                     res.writeHead(404)
