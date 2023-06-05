@@ -12,9 +12,8 @@ function validateUrl (input) {
     if (-1 < input.indexOf('\\')) {
         return false
     }
-    input = input.replace(/^\/+/, '')
     const urlRegex = /^([a-zA-Z0123456789_-]+\/?)*([a-zA-Z0123456789_-]+\.[a-z0123456789]+)?$/
-    return urlRegex.test(input)
+    return urlRegex.test(input.replace(/^\/+/, ''))
 }
 
 /**
