@@ -9,7 +9,11 @@ let quietMode = false
  * @returns {boolean} - Whether the URL is valid.
  */
 function validateUrl (input) {
-    const urlRegex = /^\/([a-zA-Z0123456789_-]+\/?)*([a-zA-Z0123456789_-]+\.[a-z0123456789]+)?$/
+    if (-1 < input.indexOf('\\')) {
+        return false
+    }
+    input = input.replace(/^\/+/, '')
+    const urlRegex = /^([a-zA-Z0123456789_-]+\/?)*([a-zA-Z0123456789_-]+\.[a-z0123456789]+)?$/
     return urlRegex.test(input)
 }
 
