@@ -12,7 +12,7 @@ buildGitHubPages({
     ],
     markdown: [
         'README.md',
-        'content/new-repository-configuration.md',
+        'docs/new-repository-configuration.md',
         'contributing/development.md',
         'contributing/self-review.md',
         'contributing/types-of-contributions.md',
