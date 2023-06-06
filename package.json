@@ -14,7 +14,7 @@
     "playwright-test-ui": "playwright test --ui",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "node scripts/build/index.mjs",
+    "build": "node scripts/build.mjs",
     "prepare": "husky install"
   },
   "lint-staged": {

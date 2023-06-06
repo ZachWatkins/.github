@@ -4,7 +4,7 @@
  * @license MIT
  * @version 0.1.0
  */
-import buildGitHubPages from './gh-pages.mjs'
+import buildGitHubPages from './modules/gh-pages.mjs'
 buildGitHubPages({
     assets: [
         ['node_modules/github-markdown-css/github-markdown.css', 'styles/github-markdown-css/github-markdown.css'],
