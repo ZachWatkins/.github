@@ -8,7 +8,7 @@
   },
   "private": true,
   "scripts": {
-    "start": "vite --host 127.0.0.1 --port 3000",
+    "start": "node scripts/serve.mjs",
     "test": "echo \"Error: no test specified\" && exit 0",
     "playwright-test": "playwright test --project=\"Google Chrome\"",
     "playwright-test-ui": "playwright test --ui",
