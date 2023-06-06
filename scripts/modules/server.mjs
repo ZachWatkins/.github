@@ -1,6 +1,6 @@
-const http = require('http')
-const fs = require('fs')
-const path = require('path')
+import http from 'http'
+import fs from 'fs'
+import path from 'path'
 let quietMode = false
 
 /**
@@ -51,7 +51,7 @@ function sanitizeUrl (input) {
  * @param {boolean} [quiet=true] - Whether to log messages.
  * @returns {Promise<http.Server>}
  */
-function start(port, quiet = true) {
+export function start(port, quiet = true) {
     quietMode = quiet
     const server = http.createServer((req, res) => {
 
@@ -64,7 +64,7 @@ function start(port, quiet = true) {
         const suffix = '/' === sanitizedUrl.charAt(sanitizedUrl.length - 1)
             ? 'index.html'
             : ''
-        const filePath = path.resolve(__dirname, '..') + path.sep + sanitizedUrl + suffix
+        const filePath = path.resolve('./') + sanitizedUrl.replaceAll('/', path.sep) + suffix
         const extname = path.extname(filePath)
         const contentType = getContentType(extname)
 
@@ -94,7 +94,7 @@ function start(port, quiet = true) {
     })
 }
 
-function stop(server) {
+export function stop(server) {
     return new Promise((resolve) => {
         server.close(() => {
             if (!quietMode) {
@@ -124,4 +124,4 @@ function getContentType(extname) {
     }
 }
 
-module.exports = { start, stop }
+export default { start, stop }

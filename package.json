@@ -8,7 +8,7 @@
   },
   "private": true,
   "scripts": {
-    "start": "vite --host 127.0.0.1 --port 3000",
+    "start": "node scripts/serve.mjs",
     "test": "echo \"Error: no test specified\" && exit 0",
     "playwright-test": "playwright test --project=\"Google Chrome\"",
     "playwright-test-ui": "playwright test --ui",
@@ -50,7 +50,6 @@
     "husky": "^8.0.0",
     "lint-staged": "^13.2.2",
     "marked": "^5.0.2",
-    "marked-gfm-heading-id": "^3.0.3",
-    "vite": "^4.3.9"
+    "marked-gfm-heading-id": "^3.0.3"
   }
 }
