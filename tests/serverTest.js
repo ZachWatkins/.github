@@ -1,5 +1,5 @@
 import baseTest from '@playwright/test'
-import { start, stop } from '../scripts/server.js'
+import { start, stop } from '../scripts/modules/server.mjs'
 
 const serverTest = baseTest.extend({
     server: [async ({}, use) => { // eslint-disable-line no-empty-pattern
