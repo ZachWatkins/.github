@@ -10,6 +10,10 @@
 source:
 - any: ['src/**/*']
 
+# Add 'tests' label to any change to test files.
+tests:
+- any: ['tests/**/*', 'test/**/*', 'spec/**/*', '**/*.spec.js', '**/*.spec.ts']
+
 # Add 'content' label to any change to content files.
 content:
 - 'content/**/*'
