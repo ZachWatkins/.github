@@ -47,11 +47,11 @@ function sanitizeUrl (input) {
 
 /**
  * Start a web server.
- * @param {number} port - The port to listen on.
+ * @param {number} [port=3000] - The port to listen on.
  * @param {boolean} [quiet=true] - Whether to log messages.
  * @returns {Promise<http.Server>}
  */
-export function start(port, quiet = true) {
+export function startServer(port = 3000, quiet = true) {
     quietMode = quiet
     const server = http.createServer((req, res) => {
 
@@ -124,4 +124,4 @@ function getContentType(extname) {
     }
 }
 
-export default { start, stop }
+export default { startServer }
