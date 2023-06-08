@@ -1,9 +1,10 @@
 import { expect } from '@playwright/test'
 import test from './serverTest.js'
 
-test('server routes to the repository\'s root folder', async ({server, page}) => {
-    expect(server.listening).toBe(true)
-    const response = await page.goto('http://localhost:3001')
+test('server loads from localhost with a port', async ({baseUrl, page}) => {
+    expect(page.url()).toMatch(/http:\/\/localhost:\d{4}/)
+    const response = await page.goto(baseUrl + '/')
     expect(response.status()).toBe(200)
+    expect(response.headers()['content-type']).toMatch(/text\/html/)
     await expect(page).toHaveTitle(/Index/)
 })
