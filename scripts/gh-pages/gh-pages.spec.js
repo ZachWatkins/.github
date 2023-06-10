@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-import test from './serverTest.js'
+import test from '../server/serverTest.js'
 
 test('has title', async ({ baseUrl, page }) => {
     await page.goto(baseUrl + '/')
