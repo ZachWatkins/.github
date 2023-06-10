@@ -23,12 +23,12 @@ function build({ markdown, assets, directory }) {
     const queue = []
 
     if (fs.existsSync(directory)) {
-        fs.rmSync(directory, { recursive: true })
+        fs.rmSync(directory, { recursive: true, force: true })
     }
 
     for (let i = 0; i < assets.length; i++) {
 
-        queue.push(new Promise((resolve) => {
+        queue.push(new Promise(async (resolve) => {
 
             const source = assets[i][0]
             const destination = directory + '/' + assets[i][1]
@@ -38,7 +38,7 @@ function build({ markdown, assets, directory }) {
                 fs.mkdirSync(destDirectory, { recursive: true })
             }
 
-            resolve(fs.copyFileSync(source, destination))
+            resolve(fs.copyFile(source, destination, (err) => err ? console.error(err) : null))
 
         }))
 
