@@ -1,0 +1,52 @@
+{
+  "name": "zachwatkins.github",
+  "version": "0.1.0",
+  "description": "Central repository of GitHub integration files.",
+  "main": "index.js",
+  "private": true,
+  "lint-staged": {
+    "*": "eslint --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zachwatkins/.github.git"
+  },
+  "keywords": [
+    "git",
+    "github",
+    "devops"
+  ],
+  "author": "Zachary K. Watkins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zachwatkins/.github/issues"
+  },
+  "homepage": "https://github.com/zachwatkins/.github#readme",
+  "devDependencies": {
+    "@types/marked": "^5.0.0",
+    "github-markdown-css": "^5.2.0",
+    "marked": "^5.0.2",
+    "marked-gfm-heading-id": "^3.0.3"
+  },
+  "config": {
+    "ghPages": {
+      "directory": "gh-pages",
+      "assets": [
+        "node_modules/github-markdown-css/github-markdown.css:styles/github-markdown-css/github-markdown.css",
+        "node_modules/github-markdown-css/license:styles/github-markdown-css/license"
+      ],
+      "markdown": [
+        "README.md",
+        "docs/new-repository-configuration.md",
+        "contributing/development.md",
+        "contributing/self-review.md",
+        "contributing/types-of-contributions.md",
+        "CHANGELOG.md",
+        "CODE_OF_CONDUCT.md",
+        "CONTRIBUTING.md",
+        "LICENSE",
+        "SECURITY.md"
+      ]
+    }
+  }
+}
