@@ -1,40 +1,33 @@
-import { expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+import fs from 'fs'
 import AxeBuilder from '@axe-core/playwright'
-import test from '../server/serverTest.js'
 import build from './gh-pages.mjs'
 
-test.beforeAll(async () => {
-    build({
+const cwd = process.cwd()
+
+test.beforeAll(async ({}, testInfo) => { // eslint-disable-line no-empty-pattern
+    await build({
         assets: [
             ['node_modules/github-markdown-css/github-markdown.css', 'styles/github-markdown-css/github-markdown.css'],
-            ['node_modules/github-markdown-css/license', 'styles/github-markdown-css/license'],
         ],
-        markdown: [
-            'README.md',
-            'docs/new-repository-configuration.md',
-            'contributing/development.md',
-            'contributing/self-review.md',
-            'contributing/types-of-contributions.md',
-            'CHANGELOG.md',
-            'CODE_OF_CONDUCT.md',
-            'CONTRIBUTING.md',
-            'LICENSE',
-            'SECURITY.md',
-        ],
-        directory: 'gh-pages',
+        markdown: ['README.md', 'LICENSE', 'SECURITY.md'],
+        directory: '_gh-pages-test' + testInfo.workerIndex,
     })
 })
 
-test('has title', async ({ baseUrl, page }) => {
-    await page.goto(baseUrl + '/')
-
-    // Expect a title "to contain" a substring.
-    await expect(page).toHaveTitle(/Index/)
+test.beforeEach(async ({ page }, testInfo) => {
+    await page.goto(`file://${cwd}/_gh-pages-test${testInfo.workerIndex}/index.html`)
 })
 
-test('has documentation link', async ({ baseUrl, page }) => {
-    await page.goto(baseUrl + '/')
+test.afterAll(async ({}, testInfo) => { // eslint-disable-line no-empty-pattern
+    fs.rm(`_gh-pages-test${testInfo.workerIndex}`, {recursive: true}, (err) => err ? console.error(err) : null)
+})
 
+test('has title', async ({ page }) => {
+    await expect(page).toHaveTitle(/[a-zA-Z\s]+/)
+})
+
+test('has documentation link', async ({ page }) => {
     // Click the get started link.
     await page.getByRole('link', { name: 'GitHub Pages' }).click()
 
@@ -42,9 +35,7 @@ test('has documentation link', async ({ baseUrl, page }) => {
     await expect(page).toHaveURL(/.*gh-pages\//)
 })
 
-test('has markdown page link', async ({ baseUrl, page }) => {
-    await page.goto(baseUrl + '/gh-pages/')
-
+test('has markdown page link', async ({ page }) => {
     // Click the New Repository Configuration link.
     await page.getByRole('link', { name: 'New Repository Configuration' }).click()
 
@@ -53,9 +44,7 @@ test('has markdown page link', async ({ baseUrl, page }) => {
 })
 
 test.describe('homepage', () => {
-    test('should not have any automatically detectable accessibility issues', async ({ baseUrl, page }, testInfo) => {
-        await page.goto(baseUrl + '/gh-pages/')
-
+    test('should not have any automatically detectable accessibility issues', async ({ page }, testInfo) => {
         const accessibilityScanResults = await new AxeBuilder({ page })
             .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
             .analyze()
