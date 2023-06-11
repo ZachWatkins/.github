@@ -8,7 +8,7 @@
   },
   "private": true,
   "scripts": {
-    "start": "node scripts/serve.mjs",
+    "start": "echo \"Error: no start specified\" && exit 0",
     "test": "echo \"Error: no test specified\" && exit 0",
     "playwright-test": "playwright test --project=\"Google Chrome\"",
     "playwright-test-ui": "playwright test --ui",
@@ -46,7 +46,6 @@
     "eslint-plugin-jsonc": "^2.7.0",
     "eslint-plugin-promise": "^6.0.0",
     "github-markdown-css": "^5.2.0",
-    "http": "^0.0.1-security",
     "husky": "^8.0.0",
     "lint-staged": "^13.2.2",
     "marked": "^5.0.2",
