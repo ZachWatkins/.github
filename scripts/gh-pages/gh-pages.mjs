@@ -22,10 +22,7 @@ async function build({ markdown, assets, directory }) {
 
     const queue = []
 
-    fs.rmdir(directory, (err) => err && 'ENOTEMPTY' !== err.code && 'ENOENT' !== err.code
-        ? console.error(err)
-        : null
-    )
+    fs.rmSync(directory, { recursive: true, force: true })
 
     for (let i = 0; i < assets.length; i++) {
 
@@ -35,13 +32,8 @@ async function build({ markdown, assets, directory }) {
             const destination = directory + '/' + assets[i][1]
             const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
 
-            fs.mkdir(destDirectory, { recursive: true }, (err) => {
-                if (err && 'ENOENT' !== err.code) {
-                    console.error(err)
-                    process.exit(1)
-                }
-                resolve(fs.copyFile(source, destination, (err) => err ? console.error(err) : null))
-            })
+            fs.mkdirSync(destDirectory, { recursive: true })
+            fs.copyFileSync(source, destination)
 
         }))
 
