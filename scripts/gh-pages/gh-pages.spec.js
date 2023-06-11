@@ -24,37 +24,27 @@ test.afterAll(async ({}, testInfo) => { // eslint-disable-line no-empty-pattern
 })
 
 test('has title', async ({ page }) => {
-    await expect(page).toHaveTitle(/[a-zA-Z\s]+/)
+    await expect(page).toHaveTitle(/GitHub Guide/)
 })
 
-test('has documentation link', async ({ page }) => {
+test('has use cases anchor link', async ({ page }) => {
     // Click the get started link.
-    await page.getByRole('link', { name: 'GitHub Pages' }).click()
+    await page.getByRole('link', { name: 'Use Cases' }).click()
 
     // Expects the URL to contain gh-pages.
-    await expect(page).toHaveURL(/.*gh-pages\//)
+    await expect(page).toHaveURL(/.*#use-cases$/)
 })
 
-test('has markdown page link', async ({ page }) => {
-    // Click the New Repository Configuration link.
-    await page.getByRole('link', { name: 'New Repository Configuration' }).click()
+test('should not have any automatically detectable accessibility issues', async ({ page }, testInfo) => {
+    const accessibilityScanResults = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze()
 
-    // Expects the URL to contain gh-pages.
-    await expect(page).toHaveURL(/.*gh-pages\/new-repository-configuration\//)
-})
-
-test.describe('homepage', () => {
-    test('should not have any automatically detectable accessibility issues', async ({ page }, testInfo) => {
-        const accessibilityScanResults = await new AxeBuilder({ page })
-            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-            .analyze()
-
-        // Attach accessibility violations to test report.
-        await testInfo.attach('accessibility-scan-results', {
-            body: JSON.stringify(accessibilityScanResults.violations, null, 2),
-            contentType: 'application/json',
-        })
-
-        expect(accessibilityScanResults.violations).toEqual([])
+    // Attach accessibility violations to test report.
+    await testInfo.attach('accessibility-scan-results', {
+        body: JSON.stringify(accessibilityScanResults.violations, null, 2),
+        contentType: 'application/json',
     })
+
+    expect(accessibilityScanResults.violations).toEqual([])
 })
