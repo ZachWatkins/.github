@@ -18,13 +18,14 @@ marked.use(gfmHeadingId())
  * @param {string} options.directory - The directory to output the built files to.
  * @returns {void}
  */
-function build({ markdown, assets, directory }) {
+async function build({ markdown, assets, directory }) {
 
     const queue = []
 
-    if (fs.existsSync(directory)) {
-        fs.rmSync(directory, { recursive: true, force: true })
-    }
+    fs.rmdir(directory, (err) => err && 'ENOTEMPTY' !== err.code && 'ENOENT' !== err.code
+        ? console.error(err)
+        : null
+    )
 
     for (let i = 0; i < assets.length; i++) {
 
@@ -34,11 +35,13 @@ function build({ markdown, assets, directory }) {
             const destination = directory + '/' + assets[i][1]
             const destDirectory = destination.substring(0, destination.lastIndexOf('/'))
 
-            if (!fs.existsSync(destDirectory)) {
-                fs.mkdirSync(destDirectory, { recursive: true })
-            }
-
-            resolve(fs.copyFile(source, destination, (err) => err ? console.error(err) : null))
+            fs.mkdir(destDirectory, { recursive: true }, (err) => {
+                if (err && 'ENOENT' !== err.code) {
+                    console.error(err)
+                    process.exit(1)
+                }
+                resolve(fs.copyFile(source, destination, (err) => err ? console.error(err) : null))
+            })
 
         }))
 
@@ -87,11 +90,19 @@ const MarkdownWebpageFactory = {
             markdownHtml = this.applyTemplate(markdownHtml, depth, pageTitle)
             markdownHtml = this.replaceMarkdownFileReferences(markdownHtml, destination)
 
-            if (!fs.existsSync(destDirectory)) {
-                fs.mkdirSync(destDirectory, { recursive: true })
-            }
+            fs.mkdir(destDirectory, { recursive: true }, async (err) => {
+                if (err) {
+                    console.error(err)
+                    process.exit(1)
+                }
+                fs.writeFile(destination, markdownHtml, (err) => {
+                    if (err) {
+                        console.error(err)
+                        process.exit(1)
+                    }
+                })
+            })
 
-            fs.writeFileSync(destination, markdownHtml)
 
         })
 
