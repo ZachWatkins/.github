@@ -1,0 +1,48 @@
+name: JavaScript Tests
+
+# **What it does**: Runs JavaScript tests.
+# **Why we have it**: Because we neet to test static input and output.
+# **Who does it impact**: Maintainers, contributors.
+
+on:
+  workflow_dispatch:
+  merge_group:
+  pull_request:
+    paths:
+      - '**.js'
+      - '**.mjs'
+      - '**.ts'
+      - '**.tsx'
+      - '**.yaml'
+      - '**.yml'
+      - '**.scss'
+      - 'src/**.css'
+      - .eslintrc.cjs
+      - 'package-lock.json'
+      - 'package.json'
+      - .github/workflows/test_js.yml
+
+permissions:
+  contents: read
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    # Only allow this workflow to be dispatched for events within this repository.
+    if: github.repository == 'zachwatkins/.github'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/node-npm-setup
+
+      - name: Run build script
+        run: npm run build
+
+      - name: Run tests
+        run: npm run test
