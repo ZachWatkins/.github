@@ -1,0 +1,42 @@
+{
+  "name": "zachwatkins.github",
+  "version": "0.1.0",
+  "description": "Central repository of GitHub integration files.",
+  "main": "index.js",
+  "engines": {
+    "node": "^18"
+  },
+  "private": true,
+  "scripts": {
+    "start": "echo \"Error: no start specified\" && exit 0",
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "build": "echo \"Error: no build specified\" && exit 0",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zachwatkins/.github.git"
+  },
+  "keywords": [],
+  "author": "Zachary K. Watkins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zachwatkins/.github/issues"
+  },
+  "homepage": "https://github.com/zachwatkins/.github#readme",
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-define-config": "^1.17.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jsonc": "^2.7.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.2.2"
+  }
+}

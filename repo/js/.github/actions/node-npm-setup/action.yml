@@ -1,0 +1,33 @@
+# https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
+name: Node set up composite action
+
+description: Will set up Node and install all packages by caching node_modules
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache node_modules
+      uses: actions/cache@v3
+      id: cache-node_modules
+      env:
+        SEGMENT_DOWNLOAD_TIMEOUT_MINS: '1'
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node_modules-${{ hashFiles('package*.json') }}-${{ hashFiles('.github/actions/node-npm-setup/action.yml') }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version-file: 'package.json'
+        cache-dependency-path: 'package-lock.json'
+        cache: npm
+
+    - name: Install dependencies
+      if: ${{ steps.cache-node_modules.outputs.cache-hit != 'true' }}
+      shell: bash
+      env:
+        # This makes it so the puppeteer npm package doesn't bother
+        # to download a copy of chromium because it can use
+        # `$PUPPETEER_EXECUTABLE_PATH` from the ubuntu Action container.
+        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+      run: npm ci --include=optional
