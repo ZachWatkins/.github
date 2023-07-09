@@ -28,7 +28,7 @@ concurrency:
 
 jobs:
   lint-js:
-    if: github.repository == 'zachwatkins/.github'
+    if: github.repository_owner == 'zachwatkins'
     permissions:
       contents: read
     runs-on: 'ubuntu-latest'
