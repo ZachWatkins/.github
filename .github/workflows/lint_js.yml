@@ -6,6 +6,7 @@ name: Lint front-end code
 
 on:
   workflow_dispatch:
+  workflow_call:
   pull_request:
     paths:
       - '**.js'
@@ -21,9 +22,6 @@ on:
       - 'package.json'
       - .github/workflows/lint_js.yml
 
-permissions:
-  contents: read
-
 concurrency:
   group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
   cancel-in-progress: true
@@ -31,6 +29,8 @@ concurrency:
 jobs:
   lint-js:
     if: github.repository == 'zachwatkins/.github'
+    permissions:
+      contents: read
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@v3
