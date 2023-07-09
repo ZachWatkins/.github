@@ -7,14 +7,14 @@ name: Triage new issues
 on:
   issues:
     types: [opened, reopened, edited]
-
-permissions:
-  issues: write
-  contents: read
+  workflow_call:
 
 jobs:
   triage_issues:
-    if: ${{ github.repository == 'zachwatkins/.github' }}
+    if: ${{ github.repository_owner == 'zachwatkins' }}
+    permissions:
+      issues: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: github/issue-labeler@v3.1

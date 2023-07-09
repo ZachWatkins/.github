@@ -21,6 +21,7 @@ on:
       - '.github/workflows/codeql.yml'
   schedule:
     - cron: '27 9 * * 2'
+  workflow_call:
 
 jobs:
   analyze:

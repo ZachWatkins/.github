@@ -7,16 +7,15 @@ name: Repo Stale Check
 on:
   schedule:
     - cron: '20 16 * * *' # Run every day at 16:20 UTC / 8:20 PST
-
-permissions:
-  issues: write
-  pull-requests: write
+  workflow_call:
 
 jobs:
   stale_contributor:
-    if: github.repository == 'zachwatkins/.github'
+    if: github.repository_owner == 'zachwatkins'
+    permissions:
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/stale@v8
         with:
