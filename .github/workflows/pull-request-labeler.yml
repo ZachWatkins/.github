@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: 'zachwatkins/.github'
       - uses: actions/labeler@v4
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
