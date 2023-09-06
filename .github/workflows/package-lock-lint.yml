@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'zachwatkins/.github'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/node-npm-setup
 
       - name: Run check
