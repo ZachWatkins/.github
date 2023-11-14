@@ -47,7 +47,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "github-markdown-css": "^5.2.0",
     "husky": "^8.0.0",
-    "lint-staged": "^13.2.2",
+    "lint-staged": "^15.1.0",
     "marked": "^5.0.2",
     "marked-gfm-heading-id": "^3.0.3"
   },
